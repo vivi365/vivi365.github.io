@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      {% if page.layout == 'home' %}
+      <div class="profile-image">
+        <img src="{{ '/assets/images/profile.jpg' | relative_url }}" alt="{{ site.title }}">
+      </div>
+      {% endif %}
+      
+      <div class="bio">
+        {% if page.layout != 'home' %}
+        <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
+        {% endif %}
+        
+        {% include navigation.html %}
+        
+        {% if page.layout == 'home' %}
+        <p>{{ site.description }}</p>
+        <p class="contact">Reach me at <a href="mailto:{{ site.email }}">{{ site.email }}</a>.</p>
+        {% endif %}
+      </div>
+      
+      {% if page.layout == 'home' %}
+      <div class="social-links">
+        <a href="https://butterfly.com" class="social-icon butterfly" aria-label="Butterfly">
+          <img src="{{ '/assets/images/pages/butterfly.png' | relative_url }}" alt="Butterfly">
+        </a>
+        <a href="https://scholar.google.com" class="social-icon scholar" aria-label="Scholar">
+          <img src="{{ '/assets/images/pages/scholar.png' | relative_url }}" alt="Scholar">
+        </a>
+        <a href="https://github.com/{{ site.github_username }}" class="social-icon github" aria-label="GitHub">
+          <img src="{{ '/assets/images/pages/github.png' | relative_url }}" alt="GitHub">
+        </a>
+      </div>
+      {% endif %}
+    </header>
+
+    <main>
+      {% if page.layout == 'home' %}
+      <div class="section-divider">
+        <h2>News</h2>
+      </div>
+      {% endif %}
+      
+      {{ content }}
+    </main>
+  </div>
+</body>
+</html>
