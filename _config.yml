@@ -21,7 +21,11 @@
 title: Vivi Andersson
 email: vivia@kth.se
 description: >- # this means to ignore newlines until "baseurl:"
-  I am a researche
+  I am a machine learning researcher based in San Francisco, California.
+  
+  My goal is to uncover the computational and statistical laws of natural
+  and artificial intelligence, and thereby design learning systems that
+  are more efficient, more automatic and more useful in practice.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://vivi365.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: vivi365
