@@ -20,9 +20,8 @@
 
 title: Vivi Andersson
 email: vivia@kth.se
-description: >- # this means to ignore newlines until "baseurl:"
-
-baseurl: "" # the subpath of your site, e.g. /blog
+description: I am a PhD student in ML for vulnerability detection based in Stockholm, Sweden. I enjoy dancing and writing.
+baseurl: "" # the subpath of your site, e.g. /blg
 url: "https://vivi365.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: vivi365
 

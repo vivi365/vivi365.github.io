@@ -2,13 +2,4 @@
 layout: default
 ---
 
-<div class="news-list">
-  <ul>
-    {% for post in site.posts %}
-    <li>
-      <span class="emoji">{{ post.emoji }}</span>
-      {{ post.content | remove: '<p>' | remove: '</p>' }}
-    </li>
-    {% endfor %}
-  </ul>
-</div>
+{{ content }}
