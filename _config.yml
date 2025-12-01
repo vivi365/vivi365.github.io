@@ -28,7 +28,7 @@ github_username: vivi365
 
 # Build settings
 plugins:
-  - jekyll-feed
+   - jekyll-feed
 
 # Custom settings
 collections:

@@ -1,42 +1,27 @@
-<!DOCTYPE html>
-<html>
+---
+layout: page
+title: Fun
+permalink: /fun/
+---
 
-<head>
-    <meta charset="UTF-8">
-    <title>Vivi Andersson</title>
-    <link rel="stylesheet" href="./styles.css">
-</head>
+## Hong Kong
 
-<body>
-    <div>
-        <h1><a href="https://vivi365.github.io/">vivi andersson</a></h1>
-        <p class="hej"><a href="https://vivi365.github.io/">projects</a>
-            <a href="https://vivi365.github.io/about">about</a>
-            <a href="https://vivi365.github.io/fun">fun</a>
-        </p>
-    </div>
-    <h2>Hong Kong</h2>
-    <div>
-        <p class="small">At the beginning of 2023, I spent some months in Hong Kong.</p>
+At the beginning of 2023, I spent some months in Hong Kong.
 
-        <img width="850" src="resources/temple.jpg">
-        <img width="850" src="resources/neon.png">
-        <img width="850" src="resources/market.png">
-        <img width="850" src="resources/construction.png">
-        <img width="850" src="resources/victoria.jpg">
-        <img width="850" src="resources/hike.jpg">
-    </div>
-    <h2>Double Exposure</h2>
-    <div>
-        <p class="small">Stockholm, London, Hong Kong.</p>
-        <img width="850" src="resources/classicist.jpg">
-        <img width="850" src="resources/hydepark.jpg">
-        <img width="850" src="resources/midsommar.jpg">
-        <img width="850" src="resources/barbican.jpg">
-        <img width="850" src="resources/hk.jpg">
-        <img width="850" src="">
-    </div>
+<img src="/assets/images/fun/temple.jpg" alt="Temple in Hong Kong" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/neon.png" alt="Neon lights in Hong Kong" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/market.png" alt="Market in Hong Kong" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/construction.png" alt="Construction site in Hong Kong" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/victoria.jpg" alt="Victoria Peak in Hong Kong" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/hike.jpg" alt="Hiking in Hong Kong" style="width:100%; max-width:800px; height:auto;">
 
-</body>
+## Double Exposure
 
-</html>
+Stockholm, London, Hong Kong.
+
+<img src="/assets/images/fun/classicist.jpg" alt="Classicist architecture" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/hydepark.jpg" alt="Hyde Park in London" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/midsommar.jpg" alt="Midsommar in Stockholm" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/barbican.jpg" alt="Barbican in London" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/hk.jpg" alt="Hong Kong skyline" style="width:100%; max-width:800px; height:auto;">
+<img src="/assets/images/fun/marseille.jpg" alt="Marseille" style="width:100%; max-width:800px; height:auto;">
