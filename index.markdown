@@ -37,12 +37,15 @@ Vivi Andersson, Benoit Baudry, Sofia Bobadilla, Ludvig Christensen, et al.
 
 **SEC-T 2025. Machine Learning for Offensive Cybersecurity**
 *Münchenbryggeriet, Stockholm, September 2025* · <a href="/assets/talks/2025-09-13-sec-t-offensive-sec-ml.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a> · <a href="https://www.youtube.com/watch?v=WFhEFm-avcs&t=4s" class="slides-link" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>Watch</a>
-<br>On how to weaponize machine learning models and how they can be leveraged in the offensive security workflow. Co-speaker: Sofia Bobadilla.
+<br>How to weaponize AI and LLMs in real-world offensive security workflows, from adversarial use and agentic techniques to automated exploit generation for blockchain smart contracts (co-speaker: Sofia Bobadilla).
 
 **Vulnerability Detection with Machine Learning**
 *KTH, Stockholm, January 2025 (Government agencies)* · <a href="/assets/talks/2025-07-01-phd-presentation.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
 <br>A talk about my PhD topic on applying machine learning to automated vulnerability detection in software systems.
 
+**Build Reproducibility for Software Integrity**
+*Dataföreningen, Online. May 2024* · <a href="/assets/talks/2024-05-23-dataforeningen.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
+<br>A tour of how reproducible builds can strengthen software supply chain integrity beyond source code logic, the practical challenges involved, and insights from making Go Ethereum reproducible.
 </section>
 
 <section id="teaching" markdown="1">
