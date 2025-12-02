@@ -4,11 +4,12 @@ title: Posts
 permalink: /posts/
 ---
 
-<ul>
+<div class="posts-list">
   {% for post in site.posts %}
-    <li>
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <p>{{ post.excerpt }}</p>
-    </li>
+    <article class="post-item">
+      <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+      <p class="post-date">{{ post.date | date: "%B %d, %Y" }}</p>
+      <div class="post-excerpt">{{ post.excerpt }}</div>
+    </article>
   {% endfor %}
-</ul>
+</div>

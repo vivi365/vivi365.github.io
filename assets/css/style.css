@@ -41,6 +41,7 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -168,6 +169,8 @@ header h1 {
   object-fit: cover;
   margin-bottom: 1.5rem;
   display: block;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .bio-section {
@@ -189,6 +192,14 @@ header h1 {
   margin-bottom: 1rem;
   text-align: left;
   color: var(--text-color);
+}
+
+.affiliation,
+.supervisors {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
 }
 
 .contact {
@@ -244,6 +255,12 @@ header h1 {
 .social-link svg {
   width: 16px;
   height: 16px;
+}
+
+.social-icon {
+  width: 16px;
+  height: 16px;
+  filter: grayscale(100%);
 }
 
 /* Main Content */
@@ -430,6 +447,23 @@ section a:hover {
   margin-top: 2.25rem;
 }
 
+#talks .slides-link {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+#talks .slides-link:hover {
+  text-decoration: underline;
+}
+
+#talks .slides-link svg {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
 /* Teaching section */
 #teaching p {
   text-align: left;
@@ -461,10 +495,151 @@ section a:hover {
   margin-top: 2.25rem;
 }
 
+/* Posts list page */
+.posts-list {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.post-item {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.post-item:last-child {
+  border-bottom: none;
+}
+
+.post-item h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.post-item h2 a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.post-item h2 a:hover {
+  color: var(--accent-color);
+}
+
+.post-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.post-excerpt {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-color);
+  text-align: center;
+}
+
+/* Individual post page */
+.post-content {
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.post-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.post-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
+}
+
+.post-body {
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.post-body h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: var(--text-color);
+}
+
+.post-body h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--text-color);
+}
+
+.post-body p {
+  margin-bottom: 1rem;
+}
+
+.post-body ul, .post-body ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.post-body li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.post-body a {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+.post-body a:hover {
+  color: var(--link-hover-color);
+}
+
+.post-body code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.post-body pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.post-body pre code {
+  background: none;
+  padding: 0;
+}
+
 /* Page content */
 .page-content, .project-content {
   max-width: 650px;
   margin: 0 auto;
+}
+
+/* Fun page - wider images */
+.fun-page {
+  max-width: 900px;
+}
+
+.fun-page img {
+  width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  display: block;
 }
 
 /* Styled link buttons */
@@ -553,6 +728,8 @@ section a:hover {
   }
 
   .bio-section p,
+  .affiliation,
+  .supervisors,
   .contact {
     text-align: center;
   }

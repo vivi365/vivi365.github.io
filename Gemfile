@@ -23,3 +23,7 @@ gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 
 # Required for Jekyll 4.x
 gem "webrick", "~> 1.8"
+
+# seo
+gem 'jekyll-sitemap'
+gem 'jekyll-seo-tag'
