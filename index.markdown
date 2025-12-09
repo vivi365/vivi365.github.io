@@ -7,10 +7,6 @@ title: Home
 
 ## Publications
 
-**PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts**
-Vivi Andersson, Sofia Bobadilla, Harald Hobbelhagen, Martin Monperrus
-*arXiv preprint arXiv:2511.02780*, 2025 · <a href="https://arxiv.org/abs/2511.02780" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
-
 **GoSurf: Identifying Software Supply Chain Attack Vectors in Go**
 Carmine Cesarano, Vivi Andersson, Roberto Natella, Martin Monperrus
 *Proceedings of the 2024 Workshop on Software Supply Chain Offensive Research and Ecosystem Defenses*, pp. 33-42, 2024 · <a href="https://dl.acm.org/doi/10.1145/3666019.3666906" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
