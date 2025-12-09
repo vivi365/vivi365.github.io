@@ -26,6 +26,16 @@ def fetch_scholar_publications(user_id: str) -> List[Dict]:
     print(f"Fetching publications for user: {user_id}")
 
     try:
+        # Use free proxies to avoid getting blocked (helpful in CI/CD)
+        from scholarly import ProxyGenerator
+        pg = ProxyGenerator()
+        try:
+            pg.FreeProxies()
+            scholarly.use_proxy(pg)
+            print("  Using free proxies to avoid rate limiting")
+        except Exception as proxy_err:
+            print(f"  Warning: Could not set up proxies ({proxy_err}), continuing without...")
+
         # Search for the author by user ID
         author = scholarly.search_author_id(user_id)
         author = scholarly.fill(author, sections=['publications'])
