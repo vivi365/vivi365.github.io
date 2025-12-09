@@ -1,0 +1,131 @@
+name: Sync Google Scholar Publications
+
+on:
+  # Run weekly on Sundays at 00:00 UTC
+  schedule:
+    - cron: '0 0 * * 0'
+
+  # Allow manual triggering
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync-publications:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run publication sync (dry-run first)
+        id: dry_run
+        run: |
+          echo "Running dry-run to check for new publications..."
+          uv run --with scholarly --with pyyaml python scripts/sync_publications.py --dry-run
+        continue-on-error: false
+
+      - name: Run publication sync (live)
+        id: sync
+        run: |
+          echo "Running live sync..."
+          uv run --with scholarly --with pyyaml python scripts/sync_publications.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "New publications detected!"
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No new publications found."
+          fi
+
+      - name: Create Pull Request
+        if: steps.check_changes.outputs.changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create a new branch
+          BRANCH_NAME="sync-publications-$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH_NAME"
+
+          # Commit changes
+          git add index.markdown
+          git commit -m "$(cat <<'EOF'
+          Add new publications from Google Scholar
+
+          Automatically synced publications from Google Scholar profile.
+
+          🤖 Generated with GitHub Actions
+          EOF
+          )"
+
+          # Push branch
+          git push origin "$BRANCH_NAME"
+
+          # Create PR
+          gh pr create \
+            --title "📚 New publications from Google Scholar" \
+            --body "$(cat <<'EOF'
+          ## Summary
+
+          This PR adds new publications detected on your Google Scholar profile.
+
+          **Changes:**
+          - Updated `index.markdown` with new publication(s)
+
+          ## Review Checklist
+
+          Please verify:
+          - [ ] Publication titles are correct
+          - [ ] Authors are formatted properly
+          - [ ] Venue and year information is accurate
+          - [ ] Paper links work correctly
+          - [ ] Formatting matches existing publications
+
+          ## How This Works
+
+          This PR was automatically created by the `sync-publications` GitHub Action, which:
+          1. Fetches publications from your Google Scholar profile
+          2. Compares with existing publications on the site
+          3. Adds any new publications found
+          4. Creates this PR for your review
+
+          The workflow runs weekly on Sundays at 00:00 UTC, and can also be triggered manually.
+
+          🤖 Generated with GitHub Actions
+          EOF
+          )" \
+            --base main \
+            --head "$BRANCH_NAME"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Publication Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ steps.check_changes.outputs.changes }}" == "true" ]]; then
+            echo "✅ New publications detected and PR created!" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No new publications found. Your site is up to date!" >> $GITHUB_STEP_SUMMARY
+          fi
