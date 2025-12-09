@@ -1,5 +1,6 @@
 ---
 layout: page
+title: ""
 permalink: /fun/
 custom_class: fun-page
 ---
