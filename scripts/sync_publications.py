@@ -211,20 +211,21 @@ def update_index_file(index_file: str, new_pubs: List[Dict], dry_run: bool = Tru
 
         if pub_section_match:
             # There's a separator (e.g., for fun publications)
-            # Insert before the separator
-            before = pub_section_match.group(1) + pub_section_match.group(2)
-            separator = pub_section_match.group(3)
-            after = pub_section_match.group(4)
+            # Insert at TOP of publications section (right after "## Publications")
+            header = pub_section_match.group(1)  # "## Publications\n"
+            existing_pubs = pub_section_match.group(2)  # Existing publications
+            separator = pub_section_match.group(3)  # "---"
+            after = pub_section_match.group(4)  # Rest of content
 
             # Format new publications
             new_content = ""
             for pub in new_pubs:
                 new_content += format_publication(pub) + "\n"
 
-            # Reconstruct
-            new_file_content = content[:pub_section_match.start()] + before + new_content + separator + after + content[pub_section_match.end():]
+            # Reconstruct: header + NEW + existing + separator + after
+            new_file_content = content[:pub_section_match.start()] + header + new_content + existing_pubs + separator + after + content[pub_section_match.end():]
         else:
-            # No separator, add at the end of publications section
+            # No separator, add at TOP of publications section
             pub_section_match = re.search(
                 r'(## Publications\s*\n)(.*?)(\n\n##|\Z)',
                 content,
@@ -232,16 +233,17 @@ def update_index_file(index_file: str, new_pubs: List[Dict], dry_run: bool = Tru
             )
 
             if pub_section_match:
-                before = pub_section_match.group(1) + pub_section_match.group(2)
-                after = pub_section_match.group(3)
+                header = pub_section_match.group(1)  # "## Publications\n"
+                existing_pubs = pub_section_match.group(2)  # Existing publications
+                after = pub_section_match.group(3)  # Next section
 
                 # Format new publications
                 new_content = ""
                 for pub in new_pubs:
                     new_content += format_publication(pub) + "\n"
 
-                # Reconstruct
-                new_file_content = content[:pub_section_match.start()] + before + new_content + after + content[pub_section_match.end():]
+                # Reconstruct: header + NEW + existing + after
+                new_file_content = content[:pub_section_match.start()] + header + new_content + existing_pubs + after + content[pub_section_match.end():]
             else:
                 print("  Error: Could not find publications section", file=sys.stderr)
                 return False
