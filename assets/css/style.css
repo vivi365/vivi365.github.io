@@ -157,55 +157,56 @@ header h1 {
 /* Sidebar */
 .sidebar {
   position: fixed;
-  top: 9rem;
+  top: clamp(6rem, 10vh, 8rem);
   left: calc(50% - 300px - 4rem - 200px);
   width: 200px;
+  overflow: visible;
 }
 
 .profile-image {
   width: 100%;
-  max-width: 200px;
+  max-width: clamp(150px, 15vw, 180px);
   height: auto;
   object-fit: cover;
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(0.75rem, 1.5vh, 1rem);
   display: block;
   border-radius: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .bio-section {
-  margin-top: 1rem;
+  margin-top: clamp(0.5rem, 1vh, 0.75rem);
 }
 
 .bio-section h2 {
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 0.8vw, 0.8rem);
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin: 0 0 1rem;
+  margin: 0 0 clamp(0.5rem, 1vh, 0.75rem);
 }
 
 .bio-section p {
-  font-size: 0.95rem;
-  line-height: 1.7;
-  margin-bottom: 1rem;
+  font-size: clamp(0.8rem, 0.85vw, 0.85rem);
+  line-height: 1.5;
+  margin-bottom: clamp(0.5rem, 1vh, 0.75rem);
   text-align: left;
   color: var(--text-color);
 }
 
 .affiliation,
 .supervisors {
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 0.8vw, 0.8rem);
   color: var(--text-secondary);
-  margin-bottom: 0.5rem;
-  line-height: 1.5;
+  margin-bottom: clamp(0.3rem, 0.5vh, 0.4rem);
+  line-height: 1.4;
 }
 
 .contact {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 0.85vw, 0.85rem);
   color: var(--text-secondary);
-  margin-bottom: 1rem;
+  margin-bottom: clamp(0.5rem, 1vh, 0.75rem);
 }
 
 /* Navigation */
@@ -235,15 +236,15 @@ header h1 {
 .social-links {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin: 1rem 0 0;
+  gap: clamp(0.25rem, 0.5vh, 0.35rem);
+  margin: clamp(0.5rem, 1vh, 0.75rem) 0 0;
 }
 
 .social-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.4rem;
+  font-size: clamp(0.75rem, 0.8vw, 0.8rem);
   color: var(--text-secondary);
   transition: color 0.2s ease;
 }
@@ -253,8 +254,8 @@ header h1 {
 }
 
 .social-link svg {
-  width: 16px;
-  height: 16px;
+  width: clamp(12px, 1.2vw, 14px);
+  height: clamp(12px, 1.2vw, 14px);
 }
 
 .social-icon {
@@ -717,9 +718,11 @@ section a:hover {
     text-align: center;
     width: 100%;
     max-width: 300px;
+    max-height: none;
     margin: 0 auto 2rem;
     padding-bottom: 2rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-y: visible;
   }
 
   .profile-image {
