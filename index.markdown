@@ -15,6 +15,10 @@ Carmine Cesarano, Vivi Andersson, Roberto Natella, Martin Monperrus
 Vivi Andersson, MSc Thesis,
 2024 · <a href="https://kth.diva-portal.org/smash/record.jsf?pid=diva2:1885558" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
+**PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts**
+Vivi Andersson and Sofia Bobadilla and Harald Hobbelhagen and Martin Monperrus
+2025 · <a href="https://arxiv.org/abs/2511.02780" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+
 ---
 
 **UPPERCASE IS ALL YOU NEED**
