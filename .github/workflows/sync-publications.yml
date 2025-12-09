@@ -15,6 +15,7 @@ permissions:
 jobs:
   sync-publications:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
@@ -32,17 +33,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run publication sync (dry-run first)
-        id: dry_run
-        run: |
-          echo "Running dry-run to check for new publications..."
-          uv run --with scholarly --with pyyaml python scripts/sync_publications.py --dry-run
-        continue-on-error: false
-
-      - name: Run publication sync (live)
+      - name: Run publication sync
         id: sync
         run: |
-          echo "Running live sync..."
+          echo "Syncing publications from Google Scholar..."
           uv run --with scholarly --with pyyaml python scripts/sync_publications.py
 
       - name: Check for changes
