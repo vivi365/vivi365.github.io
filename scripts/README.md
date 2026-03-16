@@ -6,12 +6,12 @@ Automatically syncs publications from Google Scholar to `index.markdown`.
 
 **Test locally:**
 ```bash
-uv run --with scholarly --with pyyaml python scripts/sync_publications.py --dry-run
+uv run --with "scholarly==1.7.11" --with "pyyaml==6.0.1" --with "httpx<0.28" python scripts/sync_publications.py --dry-run
 ```
 
 **Run live:**
 ```bash
-uv run --with scholarly --with pyyaml python scripts/sync_publications.py
+uv run --with "scholarly==1.7.11" --with "pyyaml==6.0.1" --with "httpx<0.28" python scripts/sync_publications.py
 ```
 
 ## Automation

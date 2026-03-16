@@ -37,7 +37,7 @@ jobs:
         id: sync
         run: |
           echo "Syncing publications from Google Scholar..."
-          uv run --with scholarly --with pyyaml python scripts/sync_publications.py
+          uv run --with "scholarly==1.7.11" --with "pyyaml==6.0.1" --with "httpx<0.28" python scripts/sync_publications.py
 
       - name: Check for changes
         id: check_changes

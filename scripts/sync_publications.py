@@ -38,7 +38,14 @@ def fetch_scholar_publications(user_id: str) -> List[Dict]:
 
         # Search for the author by user ID
         author = scholarly.search_author_id(user_id)
+        if not author:
+            raise RuntimeError(
+                "Google Scholar returned no author record. This is often due to blocking or an invalid user ID."
+            )
+
         author = scholarly.fill(author, sections=['publications'])
+        if not author or not isinstance(author, dict):
+            raise RuntimeError("Failed to retrieve author details from Google Scholar.")
 
         publications = []
         for pub in author.get('publications', []):
