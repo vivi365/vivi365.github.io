@@ -31,7 +31,11 @@ Vivi Andersson, Benoit Baudry, Sofia Bobadilla, Ludvig Christensen, et al.
 
 ## Talks
 
-**CDIS Fall Retreat. Agentic PoC Exploit Generation**
+**Huawei Future Technology Device Summit. Agentic PoC Exploit Generation for Smart Contracts**
+*Helsinki, Finland, March 2026* · <a href="/assets/talks/2026-03-10-huawei-ftds.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
+<br>Presenting PoCo's evaluation results on 23 real-world vulnerabilities to an industry audience, with discussion on scaling agentic exploit generation beyond smart contracts.
+
+**CDIS Fall Retreat. Agentic PoC Exploit Generation for Smart Contracts**
 *Hesselby slott, Sweden, November 2025* · <a href="/assets/talks/2025_11_05_poco_CDIS_retreat_prettier.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
 <br>Demonstrating automated proof-of-concept exploit generation for smart contracts using agentic AI systems.
 
