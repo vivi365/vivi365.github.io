@@ -20,7 +20,7 @@
 
 title: Vivi Andersson
 email: vivia@kth.se
-description: I am a PhD student based in Stockholm, Sweden. Currently working on automated exploit generation for smart contracts. I enjoy dancing and writing.
+description: I am a PhD student based in Stockholm, Sweden. I currently work on vulnerability variant analysis. I enjoy dancing and writing.
 baseurl: "" # the subpath of your site, e.g. /blg
 url: "https://vivi365.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username: vivi365

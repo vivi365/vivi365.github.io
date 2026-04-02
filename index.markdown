@@ -58,10 +58,14 @@ Vivi Andersson, Benoit Baudry, Sofia Bobadilla, Ludvig Christensen, et al.
 
 **EP120U Computer Systems**
 Teaching Assistant.
-Responsible for modules on high-level language, VM and assembly.
+Responsible for teaching modules on operating systems, high-level languages, virtual machines, and assembly.
 
 **MSc Theses Supervision**
 Supervisor.
-Topics on ML for vulnerability detection and open source analysis of malicious packages.
+Topics on machine learning for vulnerability detection, open source software analysis, and software supply chain security.
+
+Finished supervised theses:
+Ouday Ahmed, *An Empirical Study of Code Pre-trained Model Embeddings for Software Vulnerability Detection* Feb 2026.
+
 
 </section>
