@@ -7,10 +7,63 @@ the index.markdown file with any new publications found.
 """
 
 import argparse
+import os
 import re
 import sys
 from typing import List, Dict, Set
 from scholarly import scholarly
+
+
+class ScholarFetchError(RuntimeError):
+    """Raised when Google Scholar data cannot be fetched reliably."""
+
+
+def _extract_publications(author: Dict) -> List[Dict]:
+    """Extract the subset of publication data used by the site."""
+    publications = []
+    for pub in author.get('publications', []):
+        # Fill in details for each publication
+        pub_filled = scholarly.fill(pub)
+
+        # Extract relevant information
+        pub_data = {
+            'title': pub_filled.get('bib', {}).get('title', ''),
+            'authors': pub_filled.get('bib', {}).get('author', ''),
+            'venue': pub_filled.get('bib', {}).get('venue', ''),
+            'year': pub_filled.get('bib', {}).get('pub_year', ''),
+            'url': pub_filled.get('pub_url', ''),
+            'abstract': pub_filled.get('bib', {}).get('abstract', ''),
+        }
+
+        publications.append(pub_data)
+        print(f"  Found: {pub_data['title']}")
+
+    return publications
+
+
+def _fetch_scholar_publications_once(user_id: str, use_proxy: bool) -> List[Dict]:
+    """Attempt a single Google Scholar fetch, optionally via free proxies."""
+    if use_proxy:
+        from scholarly import ProxyGenerator
+        pg = ProxyGenerator()
+        pg.FreeProxies()
+        scholarly.use_proxy(pg)
+        print("  Using free proxies to avoid rate limiting")
+    else:
+        print("  Retrying without proxies")
+
+    # Search for the author by user ID
+    author = scholarly.search_author_id(user_id)
+    if not author:
+        raise ScholarFetchError(
+            "Google Scholar returned no author record. This is often due to blocking or an invalid user ID."
+        )
+
+    author = scholarly.fill(author, sections=['publications'])
+    if not author or not isinstance(author, dict):
+        raise ScholarFetchError("Failed to retrieve author details from Google Scholar.")
+
+    return _extract_publications(author)
 
 
 def fetch_scholar_publications(user_id: str) -> List[Dict]:
@@ -25,52 +78,17 @@ def fetch_scholar_publications(user_id: str) -> List[Dict]:
     """
     print(f"Fetching publications for user: {user_id}")
 
-    try:
-        # Use free proxies to avoid getting blocked (helpful in CI/CD)
-        from scholarly import ProxyGenerator
-        pg = ProxyGenerator()
+    errors = []
+    for use_proxy in (True, False):
         try:
-            pg.FreeProxies()
-            scholarly.use_proxy(pg)
-            print("  Using free proxies to avoid rate limiting")
-        except Exception as proxy_err:
-            print(f"  Warning: Could not set up proxies ({proxy_err}), continuing without...")
+            publications = _fetch_scholar_publications_once(user_id, use_proxy=use_proxy)
+            print(f"\nTotal publications found: {len(publications)}")
+            return publications
+        except Exception as err:
+            errors.append(f"{'proxy' if use_proxy else 'direct'} fetch failed: {err}")
+            print(f"  Warning: {errors[-1]}", file=sys.stderr)
 
-        # Search for the author by user ID
-        author = scholarly.search_author_id(user_id)
-        if not author:
-            raise RuntimeError(
-                "Google Scholar returned no author record. This is often due to blocking or an invalid user ID."
-            )
-
-        author = scholarly.fill(author, sections=['publications'])
-        if not author or not isinstance(author, dict):
-            raise RuntimeError("Failed to retrieve author details from Google Scholar.")
-
-        publications = []
-        for pub in author.get('publications', []):
-            # Fill in details for each publication
-            pub_filled = scholarly.fill(pub)
-
-            # Extract relevant information
-            pub_data = {
-                'title': pub_filled.get('bib', {}).get('title', ''),
-                'authors': pub_filled.get('bib', {}).get('author', ''),
-                'venue': pub_filled.get('bib', {}).get('venue', ''),
-                'year': pub_filled.get('bib', {}).get('pub_year', ''),
-                'url': pub_filled.get('pub_url', ''),
-                'abstract': pub_filled.get('bib', {}).get('abstract', ''),
-            }
-
-            publications.append(pub_data)
-            print(f"  Found: {pub_data['title']}")
-
-        print(f"\nTotal publications found: {len(publications)}")
-        return publications
-
-    except Exception as e:
-        print(f"Error fetching publications: {e}", file=sys.stderr)
-        return []
+    raise ScholarFetchError("; ".join(errors))
 
 
 def parse_existing_publications(index_file: str) -> Set[str]:
@@ -293,6 +311,11 @@ def main():
         action='store_true',
         help='Show what would be changed without making changes'
     )
+    parser.add_argument(
+        '--strict-fetch',
+        action='store_true',
+        help='Exit with code 1 when Google Scholar cannot be fetched'
+    )
 
     args = parser.parse_args()
 
@@ -301,11 +324,20 @@ def main():
     print("=" * 80)
 
     # Fetch publications from Google Scholar
-    scholar_pubs = fetch_scholar_publications(args.user_id)
+    try:
+        scholar_pubs = fetch_scholar_publications(args.user_id)
+    except ScholarFetchError as err:
+        print(f"\nError fetching publications: {err}", file=sys.stderr)
+        if args.strict_fetch or not os.environ.get("GITHUB_ACTIONS"):
+            return 1
+        print("Skipping sync because Google Scholar blocked the scraper or the proxy failed.")
+        print("Status: Skipped due to transient fetch error")
+        return 0
 
     if not scholar_pubs:
-        print("\nNo publications found on Google Scholar. Exiting.")
-        return 1
+        print("\nNo publications found on Google Scholar. Nothing to sync.")
+        print("Status: No changes needed")
+        return 0
 
     # Parse existing publications
     existing_titles = parse_existing_publications(args.index_file)
