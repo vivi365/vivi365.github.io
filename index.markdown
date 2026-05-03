@@ -11,6 +11,10 @@ title: Home
 Vivi Andersson and Sofia Bobadilla and Harald Hobbelhagen and Martin Monperrus
 2025 · <a href="https://arxiv.org/abs/2511.02780" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
+**Evaluating Cryptographic API Misuse Detectors for Go**
+Vivi Andersson and Martin Monperrus
+2026 · <a href="https://arxiv.org/abs/2604.24085" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+
 **GoSurf: Identifying Software Supply Chain Attack Vectors in Go**
 Carmine Cesarano, Vivi Andersson, Roberto Natella, Martin Monperrus
 *Proceedings of the 2024 Workshop on Software Supply Chain Offensive Research and Ecosystem Defenses*, pp. 33-42, 2024 · <a href="https://dl.acm.org/doi/10.1145/3666019.3666906" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
@@ -20,6 +24,11 @@ Vivi Andersson, MSc Thesis,
 2024 · <a href="https://kth.diva-portal.org/smash/record.jsf?pid=diva2:1885558" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 ---
+
+**AI Agents Decline Free Beer🍺 but Have a Big Heart❤️**
+Carmine Cesarano and Vivi Andersson and Julien Malka and Sofia Bobadilla and Martin Monperrus and Tim Toady and Aman Sharma and Frank Reyes García
+2026 · <a href="https://www.diva-portal.org/smash/record.jsf?pid=diva2:2055070" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+
 
 **UPPERCASE IS ALL YOU NEED**
 Vivi Andersson, Benoit Baudry, Sofia Bobadilla, Ludvig Christensen, et al.
