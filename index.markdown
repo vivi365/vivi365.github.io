@@ -8,31 +8,31 @@ title: Home
 ## Publications
 
 **PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts**
-Vivi Andersson and Sofia Bobadilla and Harald Hobbelhagen and Martin Monperrus
-2025 · <a href="https://arxiv.org/abs/2511.02780" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+Vivi Andersson* and Sofia Bobadilla* and Harald Hobbelhagen and Martin Monperrus
+*Accepted for the ACM TOSEM Special Issue on Agentic AI in Software ('26)*, 2025 · <a href="https://arxiv.org/abs/2511.02780" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 **Evaluating Cryptographic API Misuse Detectors for Go**
 Vivi Andersson and Martin Monperrus
-2026 · <a href="https://arxiv.org/abs/2604.24085" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+*Proceedings of the 4th International Workshop on Software Vulnerability Management (SVM '26)*, 2026 · <a href="https://arxiv.org/abs/2604.24085" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 **GoSurf: Identifying Software Supply Chain Attack Vectors in Go**
 Carmine Cesarano, Vivi Andersson, Roberto Natella, Martin Monperrus
 *Proceedings of the 2024 Workshop on Software Supply Chain Offensive Research and Ecosystem Defenses*, pp. 33-42, 2024 · <a href="https://dl.acm.org/doi/10.1145/3666019.3666906" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 **Geth Rebuild: Verifiable Builds for Go Ethereum**
-Vivi Andersson, MSc Thesis,
-2024 · <a href="https://kth.diva-portal.org/smash/record.jsf?pid=diva2:1885558" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+Vivi Andersson
+*MSc Thesis, KTH Royal Institute of Technology*, 2024 · <a href="https://urn.kb.se/resolve?urn=urn:nbn:se:kth:diva-355285" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 ---
 
 **AI Agents Decline Free Beer🍺 but Have a Big Heart❤️**
 Carmine Cesarano and Vivi Andersson and Julien Malka and Sofia Bobadilla and Martin Monperrus and Tim Toady and Aman Sharma and Frank Reyes García
-2026 · <a href="https://www.diva-portal.org/smash/record.jsf?pid=diva2:2055070" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+*SIGBOVIK: A Record of the Proceedings of SIGBOVIK 2026*, 2026 · <a href="https://www.diva-portal.org/smash/record.jsf?pid=diva2:2055070" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 
 **UPPERCASE IS ALL YOU NEED**
 Vivi Andersson, Benoit Baudry, Sofia Bobadilla, Ludvig Christensen, et al.
-*SIGBOVIK*, pp. 24-35, 2025 · <a href="https://sigbovik.org/2025/proceedings.pdf" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
+*SIGBOVIK: A Record of the Proceedings of SIGBOVIK 2025*, pp. 24-35, 2025 · <a href="https://sigbovik.org/2025/proceedings.pdf" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>
 
 </section>
 
