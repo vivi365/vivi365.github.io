@@ -378,33 +378,50 @@ section a:hover {
   font-size: 0.9rem;
 }
 
-#publications p strong {
+#publications .publication-title {
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-color);
   display: block;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.05rem;
   position: relative;
   padding-left: 1.5rem;
 }
 
-#publications p strong a {
+#publications .publication-title a {
   color: var(--text-color);
   text-decoration: none;
 }
 
-#publications p strong a:hover {
+#publications .publication-title a:hover {
   color: var(--text-secondary);
   text-decoration: underline;
 }
 
-#publications p strong::before {
+#publications .author-highlight {
+  font-weight: 700;
+}
+
+#publications .publication-title::before {
   content: '✦';
   position: absolute;
   left: 0;
   color: #8b7aa8;
   font-size: 0.85rem;
   top: 0.15rem;
+}
+
+#publications .publication-authors,
+#publications .publication-links {
+  display: inline;
+}
+
+#publications .publication-authors {
+  margin-bottom: 0.05rem;
+}
+
+#publications .publication-meta {
+  display: block;
 }
 
 #publications p + p {

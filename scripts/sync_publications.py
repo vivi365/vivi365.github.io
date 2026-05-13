@@ -12,10 +12,70 @@ import re
 import sys
 from typing import List, Dict, Set
 from scholarly import scholarly
+import yaml
 
 
 class ScholarFetchError(RuntimeError):
     """Raised when Google Scholar data cannot be fetched reliably."""
+
+
+AUTHOR_DISPLAY_LIMIT = 3
+OWN_NAME = "Vivi Andersson"
+
+
+def load_publication_overrides() -> Dict:
+    """Load optional publication display overrides from YAML."""
+    overrides_path = os.path.join(
+        os.path.dirname(__file__),
+        "publication_overrides.yml",
+    )
+    if not os.path.exists(overrides_path):
+        return {}
+
+    with open(overrides_path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+
+    if not isinstance(data, dict):
+        return {}
+
+    return data
+
+
+def split_authors(authors: str) -> List[str]:
+    """Split an author string from Google Scholar into individual names."""
+    if not authors:
+        return []
+
+    parts = re.split(r"\s*(?:,| and )\s*", authors.strip())
+    return [part.strip() for part in parts if part.strip()]
+
+
+def emphasize_own_name(name: str) -> str:
+    """Bold the site owner's name in author lists."""
+    if name == OWN_NAME:
+        return f'<span class="author-highlight">{name}</span>'
+    return name
+
+
+def format_authors(title: str, authors: str, overrides: Dict) -> str:
+    """Format authors with consistent separators, truncation, and overrides."""
+    author_display_overrides = overrides.get("author_display_overrides", {})
+    if title in author_display_overrides:
+        return author_display_overrides[title]
+
+    author_names = split_authors(authors)
+    visible_authors = author_names[:AUTHOR_DISPLAY_LIMIT]
+    formatted_names = [emphasize_own_name(name) for name in visible_authors]
+
+    if len(author_names) > AUTHOR_DISPLAY_LIMIT:
+        return f"{', '.join(formatted_names)}, et al."
+    if len(formatted_names) == 2:
+        return " and ".join(formatted_names)
+    if len(formatted_names) == 3:
+        return f"{formatted_names[0]}, {formatted_names[1]}, and {formatted_names[2]}"
+    if len(formatted_names) == 1:
+        return formatted_names[0]
+    return ", ".join(formatted_names)
 
 
 def _extract_publications(author: Dict) -> List[Dict]:
@@ -116,9 +176,14 @@ def parse_existing_publications(index_file: str) -> Set[str]:
 
         pub_section = pub_match.group(1)
 
-        # Extract all bold titles (publications)
-        # Pattern: **Title**
-        titles = re.findall(r'\*\*(.+?)\*\*', pub_section)
+        # Extract publication titles from the explicit title markup.
+        titles = re.findall(
+            r'<span class="publication-title">(.+?)</span>',
+            pub_section,
+        )
+        if not titles:
+            # Backward compatibility for legacy markdown entries.
+            titles = re.findall(r'\*\*(.+?)\*\*', pub_section)
 
         # Normalize titles for comparison (lowercase, strip whitespace)
         normalized_titles = {title.strip().lower() for title in titles}
@@ -142,7 +207,7 @@ def normalize_title(title: str) -> str:
     return title.strip().lower()
 
 
-def format_publication(pub: Dict) -> str:
+def format_publication(pub: Dict, overrides: Dict) -> str:
     """
     Format a publication to match the existing style.
 
@@ -153,27 +218,29 @@ def format_publication(pub: Dict) -> str:
         Formatted markdown string
     """
     title = pub['title']
-    authors = pub['authors']
+    authors = format_authors(pub['title'], pub['authors'], overrides)
     venue = pub['venue']
     year = pub['year']
     url = pub['url']
 
-    # Format the publication entry
-    formatted = f"**{title}**\n"
-    formatted += f"{authors}\n"
-
-    # Format venue and year
-    if venue:
-        formatted += f"*{venue}*, {year}"
-    else:
-        formatted += f"{year}"
-
-    # Add paper link with SVG icon
+    link_html = ""
     if url:
-        formatted += f' · <a href="{url}" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>'
+        link_html = f' · <a href="{url}" target="_blank" class="paper-link"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>Paper</a>'
 
-    formatted += "\n"
+    meta = ""
+    if venue:
+        meta += f"*{venue}*, {year}"
+    else:
+        meta += f"{year}"
 
+    formatted = (
+        f'<p class="publication-entry">'
+        f'<span class="publication-title">{title}</span>'
+        f'<span class="publication-authors">{authors}</span>'
+        f'<span class="publication-links">{link_html}</span>'
+        f'<span class="publication-meta">{meta}</span>'
+        f'</p>\n'
+    )
     return formatted
 
 
@@ -245,7 +312,7 @@ def update_index_file(index_file: str, new_pubs: List[Dict], dry_run: bool = Tru
             # Format new publications
             new_content = ""
             for pub in new_pubs:
-                new_content += format_publication(pub) + "\n"
+                new_content += format_publication(pub, overrides) + "\n"
 
             # Reconstruct: header + NEW + existing + separator + after
             new_file_content = content[:pub_section_match.start()] + header + new_content + existing_pubs + separator + after + content[pub_section_match.end():]
@@ -265,7 +332,7 @@ def update_index_file(index_file: str, new_pubs: List[Dict], dry_run: bool = Tru
                 # Format new publications
                 new_content = ""
                 for pub in new_pubs:
-                    new_content += format_publication(pub) + "\n"
+                    new_content += format_publication(pub, overrides) + "\n"
 
                 # Reconstruct: header + NEW + existing + after
                 new_file_content = content[:pub_section_match.start()] + header + new_content + existing_pubs + after + content[pub_section_match.end():]
@@ -277,7 +344,7 @@ def update_index_file(index_file: str, new_pubs: List[Dict], dry_run: bool = Tru
             print("\n[DRY RUN] Would add the following content:")
             print("-" * 80)
             for pub in new_pubs:
-                print(format_publication(pub))
+                print(format_publication(pub, overrides))
             print("-" * 80)
         else:
             # Write the updated content

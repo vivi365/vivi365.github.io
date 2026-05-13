@@ -1,0 +1,3 @@
+author_display_overrides:
+  "PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts": "<span class=\"author-highlight\">Vivi Andersson</span>*, Sofia Bobadilla*, Harald Hobbelhagen, et al."
+  "Geth Rebuild: Verifiable Builds for Go Ethereum": "<span class=\"author-highlight\">Vivi Andersson</span> · Supervised by Javier Ron"

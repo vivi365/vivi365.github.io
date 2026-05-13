@@ -64,7 +64,7 @@ jobs:
           git checkout -b "$BRANCH_NAME"
 
           # Commit changes
-          git add index.markdown
+          git add index.markdown scripts/publication_overrides.yml scripts/README.md
           git commit -m "$(cat <<'EOF'
           Add new publications from Google Scholar
 
@@ -87,6 +87,7 @@ jobs:
 
           **Changes:**
           - Updated `index.markdown` with new publication(s)
+          - Preserved publication formatting rules and manual overrides
 
           ## Review Checklist
 
@@ -101,9 +102,10 @@ jobs:
 
           This PR was automatically created by the `sync-publications` GitHub Action, which:
           1. Fetches publications from your Google Scholar profile
-          2. Compares with existing publications on the site
-          3. Adds any new publications found
-          4. Creates this PR for your review
+          2. Normalizes author formatting to the site's house style
+          3. Applies title-based display overrides for special cases
+          4. Adds any new publications found
+          5. Creates this PR for your review
 
           The workflow runs weekly on Sundays at 00:00 UTC, and can also be triggered manually.
 
