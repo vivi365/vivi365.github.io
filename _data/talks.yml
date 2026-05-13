@@ -1,0 +1,82 @@
+- title: "Dagstuhl Seminar 26192. Evaluating Logical Correctness in Agentic PoC Exploit Generation"
+  location: "Dagstuhl, Germany"
+  date_display: "6 May 2026"
+  sort_date: "2026-05-06"
+  description: "A Dagstuhl talk focused on how we evaluated PoCo's logical correctness, including the methodology and criteria used to assess whether generated proof-of-concept exploits matched the intended vulnerability behavior."
+  featured: true
+  links:
+    - label: "Seminar"
+      url: "https://www.dagstuhl.de/26192"
+      kind: "external"
+    - label: "Slides"
+      url: "/assets/talks/2026-05-06-dagstuhl-poco-logical-correctness.pdf"
+      kind: "slides"
+
+- title: "SVM 2026. Evaluating Cryptographic API Misuse Detectors for Go"
+  location: "Rio de Janeiro, Brazil"
+  date_display: "18 April 2026"
+  sort_date: "2026-04-18"
+  description: "The first systematic study of cryptographic API misuse detection in Go, comparing four tools across 328 security-critical open-source projects. Presented at SVM 2026, co-located with ICSE."
+  featured: true
+  links:
+    - label: "Slides"
+      url: "/assets/talks/2026_04_18_SVM26_go_crypto_misuse.pdf"
+      kind: "slides"
+
+- title: "Huawei Future Technology Device Summit. Agentic PoC Exploit Generation for Smart Contracts"
+  location: "Helsinki, Finland"
+  date_display: "March 2026"
+  sort_date: "2026-03-10"
+  description: "Presenting PoCo's evaluation results on 23 real-world vulnerabilities to an industry audience, with discussion on scaling agentic exploit generation beyond smart contracts."
+  featured: true
+  links:
+    - label: "Slides"
+      url: "/assets/talks/2026-03-10-huawei-ftds.pdf"
+      kind: "slides"
+
+- title: "CDIS Fall Retreat. Agentic PoC Exploit Generation for Smart Contracts"
+  location: "Hesselby slott, Sweden"
+  date_display: "November 2025"
+  sort_date: "2025-11-05"
+  description: "Demonstrating automated proof-of-concept exploit generation for smart contracts using agentic AI systems."
+  featured: false
+  links:
+    - label: "Slides"
+      url: "/assets/talks/2025_11_05_poco_CDIS_retreat_prettier.pdf"
+      kind: "slides"
+
+- title: "SEC-T 2025. Machine Learning for Offensive Cybersecurity"
+  location: "Munchenbryggeriet, Stockholm"
+  date_display: "September 2025"
+  sort_date: "2025-09-13"
+  description: "How to weaponize AI and LLMs in real-world offensive security workflows, from adversarial use and agentic techniques to automated exploit generation for blockchain smart contracts (co-speaker: Sofia Bobadilla)."
+  featured: true
+  links:
+    - label: "Slides"
+      url: "/assets/talks/2025-09-13-sec-t-offensive-sec-ml.pdf"
+      kind: "slides"
+    - label: "Watch"
+      url: "https://www.youtube.com/watch?v=WFhEFm-avcs&t=4s"
+      kind: "watch"
+
+- title: "Vulnerability Detection with Machine Learning"
+  location: "KTH, Stockholm"
+  date_display: "January 2025 (Government agencies)"
+  sort_date: "2025-01-15"
+  description: "A talk about my PhD topic on applying machine learning to automated vulnerability detection in software systems."
+  featured: false
+  links:
+    - label: "Slides"
+      url: "/assets/talks/2025-07-01-phd-presentation.pdf"
+      kind: "slides"
+
+- title: "Build Reproducibility for Software Integrity"
+  location: "Dataforeningen, Online"
+  date_display: "May 2024"
+  sort_date: "2024-05-23"
+  description: "A tour of how reproducible builds can strengthen software supply chain integrity beyond source code logic, the practical challenges involved, and insights from making Go Ethereum reproducible."
+  featured: false
+  links:
+    - label: "Slides"
+      url: "/assets/talks/2024-05-23-dataforeningen.pdf"
+      kind: "slides"

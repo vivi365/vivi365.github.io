@@ -40,33 +40,14 @@ Vivi Andersson, Benoit Baudry, Sofia Bobadilla, Ludvig Christensen, et al.
 
 ## Talks
 
-**Dagstuhl Seminar 26192. Evaluating Logical Correctness in Agentic PoC Exploit Generation**
-*Dagstuhl, Germany, 6 May 2026* · <a href="https://www.dagstuhl.de/26192" target="_blank" rel="noopener" class="slides-link">Seminar</a> · <a href="/assets/talks/2026-05-06-dagstuhl-poco-logical-correctness.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
-<br>A Dagstuhl talk focused on how we evaluated PoCo's logical correctness, including the methodology and criteria used to assess whether generated proof-of-concept exploits matched the intended vulnerability behavior.
+{% assign featured_talks = site.data.talks | where: "featured", true | sort: "sort_date" | reverse %}
+{% for talk in featured_talks %}
+<p><strong>{{ talk.title }}</strong>
+<em>{{ talk.location }}, {{ talk.date_display }}</em>{% for link in talk.links %} · <a href="{{ link.url }}" target="_blank"{% unless link.url contains '/assets/' %} rel="noopener"{% endunless %} class="slides-link">{% if link.kind == "slides" %}<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>{% elsif link.kind == "watch" %}<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>{% endif %} {{ link.label }}</a>{% endfor %}
+<br>{{ talk.description }}</p>
+{% endfor %}
 
-**SVM 2026. Evaluating Cryptographic API Misuse Detectors for Go**
-*Rio de Janeiro, Brazil, 18 April 2026* · <a href="/assets/talks/2026_04_18_SVM26_go_crypto_misuse.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
-<br>The first systematic study of cryptographic API misuse detection in Go, comparing four tools across 328 security-critical open-source projects. Presented at SVM 2026, co-located with ICSE.
-
-**Huawei Future Technology Device Summit. Agentic PoC Exploit Generation for Smart Contracts**
-*Helsinki, Finland, March 2026* · <a href="/assets/talks/2026-03-10-huawei-ftds.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
-<br>Presenting PoCo's evaluation results on 23 real-world vulnerabilities to an industry audience, with discussion on scaling agentic exploit generation beyond smart contracts.
-
-**CDIS Fall Retreat. Agentic PoC Exploit Generation for Smart Contracts**
-*Hesselby slott, Sweden, November 2025* · <a href="/assets/talks/2025_11_05_poco_CDIS_retreat_prettier.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
-<br>Demonstrating automated proof-of-concept exploit generation for smart contracts using agentic AI systems.
-
-**SEC-T 2025. Machine Learning for Offensive Cybersecurity**
-*Münchenbryggeriet, Stockholm, September 2025* · <a href="/assets/talks/2025-09-13-sec-t-offensive-sec-ml.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a> · <a href="https://www.youtube.com/watch?v=WFhEFm-avcs&t=4s" class="slides-link" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 5v14l11-7z"/></svg>Watch</a>
-<br>How to weaponize AI and LLMs in real-world offensive security workflows, from adversarial use and agentic techniques to automated exploit generation for blockchain smart contracts (co-speaker: Sofia Bobadilla).
-
-**Vulnerability Detection with Machine Learning**
-*KTH, Stockholm, January 2025 (Government agencies)* · <a href="/assets/talks/2025-07-01-phd-presentation.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
-<br>A talk about my PhD topic on applying machine learning to automated vulnerability detection in software systems.
-
-**Build Reproducibility for Software Integrity**
-*Dataföreningen, Online. May 2024* · <a href="/assets/talks/2024-05-23-dataforeningen.pdf" target="_blank" class="slides-link"><svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> Slides</a>
-<br>A tour of how reproducible builds can strengthen software supply chain integrity beyond source code logic, the practical challenges involved, and insights from making Go Ethereum reproducible.
+<p class="talks-archive-link"><a href="{{ '/talks/' | relative_url }}">See all talks</a></p>
 </section>
 
 <section id="teaching" markdown="1">

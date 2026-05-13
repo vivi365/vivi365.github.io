@@ -418,14 +418,16 @@ section a:hover {
 }
 
 /* Talks section */
-#talks p {
+#talks p,
+#talks-archive p {
   text-align: left;
   margin-bottom: 0.5rem;
   line-height: 1.6;
   font-size: 0.9rem;
 }
 
-#talks p strong {
+#talks p strong,
+#talks-archive p strong {
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-color);
@@ -435,7 +437,8 @@ section a:hover {
   padding-left: 1.5rem;
 }
 
-#talks p strong::before {
+#talks p strong::before,
+#talks-archive p strong::before {
   content: '✦';
   position: absolute;
   left: 0;
@@ -444,25 +447,46 @@ section a:hover {
   top: 0.15rem;
 }
 
-#talks p + p {
+#talks p + p,
+#talks-archive p + p {
   margin-top: 2.25rem;
 }
 
-#talks .slides-link {
+#talks .slides-link,
+#talks-archive .slides-link {
   color: var(--accent-color);
   text-decoration: none;
   font-size: 0.85rem;
 }
 
-#talks .slides-link:hover {
+#talks .slides-link:hover,
+#talks-archive .slides-link:hover {
   text-decoration: underline;
 }
 
-#talks .slides-link svg {
+#talks .slides-link svg,
+#talks-archive .slides-link svg {
   width: 14px;
   height: 14px;
   vertical-align: middle;
   margin-right: 3px;
+}
+
+#talks .talks-archive-link,
+#talks-archive .talks-archive-link {
+  margin-top: 1.5rem;
+}
+
+#talks .talks-archive-link a,
+#talks-archive .talks-archive-link a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+#talks .talks-archive-link a:hover,
+#talks-archive .talks-archive-link a:hover {
+  text-decoration: underline;
 }
 
 /* Publications section */
