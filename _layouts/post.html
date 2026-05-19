@@ -5,7 +5,17 @@ layout: default
 <article class="post-content">
   <header class="post-header">
     <h1>{{ page.title }}</h1>
-    <p class="post-date">{{ page.date | date: "%B %d, %Y" }}</p>
+    <p class="post-date">
+      <span>{{ page.date | date: "%B %d, %Y" }}</span>
+      {% if page.paper_url %}
+      <span class="post-date-separator">·</span>
+      <a class="post-paper-link" href="{{ page.paper_url }}" target="_blank" rel="noopener"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>{{ page.paper_label | default: "Paper" }}</a>
+      {% endif %}
+      {% if page.artifact_url %}
+      <span class="post-date-separator">·</span>
+      <a class="post-paper-link" href="{{ page.artifact_url }}" target="_blank" rel="noopener"><svg fill="currentColor"><use href="#icon-github"/></svg>{{ page.artifact_label | default: "Artifact" }}</a>
+      {% endif %}
+    </p>
     {% if page.dek %}
     <p class="post-dek">{{ page.dek }}</p>
     {% endif %}

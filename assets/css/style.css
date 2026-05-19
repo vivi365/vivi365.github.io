@@ -621,6 +621,33 @@ section a:hover {
   line-height: 1.3;
 }
 
+.post-date-separator {
+  margin: 0 0.35rem;
+}
+
+.post-paper-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--accent-color);
+  text-decoration: none;
+  font-size: 0.92rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.post-paper-link:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.post-paper-link svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  display: block;
+}
+
 .post-dek {
   max-width: 40rem;
   margin: 0.75rem auto 0;
