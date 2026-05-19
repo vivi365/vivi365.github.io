@@ -266,7 +266,7 @@ header h1 {
 
 /* Main Content */
 .main-content {
-  width: 600px;
+  width: 640px;
   margin: 0 auto;
 }
 
@@ -839,13 +839,13 @@ section a:hover {
   }
 
   .main-content {
-    width: 500px;
+    width: 540px;
   }
 }
 
 @media (max-width: 1000px) {
   .main-content {
-    width: 450px;
+    width: 480px;
   }
 
   .sidebar {
