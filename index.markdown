@@ -42,16 +42,15 @@ title: Home
 
 ## Teaching
 
-**EP120U Computer Systems**
+**EP120U Computer Systems, KTH**
 Teaching Assistant.
 Responsible for teaching modules on operating systems, high-level languages, virtual machines, and assembly.
 
-**MSc Theses Supervision**
+**MSc Thesis Supervision, KTH**
 Supervisor.
 Topics on machine learning for vulnerability detection, open source software analysis, and software supply chain security.
-
-Finished supervised theses:
-Ouday Ahmed, *An Empirical Study of Code Pre-trained Model Embeddings for Software Vulnerability Detection* Feb 2026.
+<br><br>Finished supervised thesis:<br>
+Ouday Ahmed, <em>An Empirical Study of Code Pre-trained Model Embeddings for Software Vulnerability Detection</em> (Feb 2026).
 
 
 </section>
