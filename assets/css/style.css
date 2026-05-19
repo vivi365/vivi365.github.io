@@ -383,7 +383,7 @@ section a:hover {
   font-weight: 500;
   color: var(--text-color);
   display: block;
-  margin-bottom: 0.05rem;
+  margin-bottom: 0.25rem;
   position: relative;
   padding-left: 1.5rem;
 }
@@ -411,17 +411,21 @@ section a:hover {
   top: 0.15rem;
 }
 
-#publications .publication-authors,
-#publications .publication-links {
+#publications .publication-authors {
   display: inline;
+  line-height: 1.55;
+  color: var(--text-color);
 }
 
-#publications .publication-authors {
-  margin-bottom: 0.05rem;
+#publications .publication-links {
+  display: inline;
+  color: var(--text-color);
 }
 
 #publications .publication-meta {
   display: block;
+  margin-top: 0.05rem;
+  line-height: 1.55;
 }
 
 #publications p + p {
@@ -508,9 +512,18 @@ section a:hover {
 
 /* Publications section */
 #publications .paper-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
   color: var(--accent-color);
   text-decoration: none;
   font-size: 0.85rem;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+#publications .publication-links::before {
+  content: " · ";
 }
 
 #publications .paper-link:hover {
@@ -518,9 +531,10 @@ section a:hover {
 }
 
 #publications .paper-link svg {
-  width: 20px;
-  height: 20px;
-  vertical-align: middle;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  display: block;
   margin-right: 3px;
 }
 
