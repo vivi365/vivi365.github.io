@@ -1,5 +1,78 @@
 # AGENTS.md
 
+## Local Build
+
+This site is a Jekyll app.
+
+Preferred native workflow:
+
+1. Use `Ruby >= 2.7.0`
+2. Run `bundle install`
+3. Run `bundle exec jekyll serve --livereload --host 127.0.0.1 --port 4000`
+4. Open `http://127.0.0.1:4000`
+
+If the host Ruby is too old for the pinned Jekyll version, use Docker:
+
+```sh
+docker run --rm -p 4000:4000 -p 35729:35729 \
+  -v /Users/viviandersson/code/vivi365.github.io:/srv/jekyll \
+  -w /srv/jekyll \
+  -u 501:20 \
+  -e HOME=/tmp \
+  -e GEM_HOME=/tmp/gems \
+  -e BUNDLE_PATH=/srv/jekyll/vendor/bundle \
+  -e BUNDLE_APP_CONFIG=/srv/jekyll/.bundle \
+  ruby:3.3 \
+  sh -lc 'gem install --user-install bundler -v 2.4.22 && export PATH=/tmp/gems/bin:$PATH && bundle _2.4.22_ install && bundle _2.4.22_ exec jekyll serve --livereload --host 0.0.0.0 --port 4000'
+```
+
+Notes:
+
+- This repository currently pins `jekyll ~> 4.4.1`, which requires `Ruby >= 2.7.0`.
+- The Docker workflow installs gems into `vendor/bundle` in the repo, so subsequent runs are faster.
+- LiveReload listens on port `35729`.
+
+## Adding a Post
+
+Posts live in [`_posts/`](/Users/viviandersson/code/vivi365.github.io/_posts).
+
+When adding a new post:
+
+1. Create a file named `YYYY-MM-DD-short-slug.markdown`
+2. Use `layout: post`
+3. Include `title`, `date`, and `excerpt` in the front matter
+4. Add `dek` when the post benefits from a subtitle under the title/date
+5. Keep the body in Markdown unless inline HTML is clearly needed
+
+Recommended front matter:
+
+```yaml
+---
+layout: post
+title: "Post Title"
+date: 2026-05-19
+excerpt: "One-sentence summary used in post listings and metadata."
+dek: "Optional subtitle shown on the post page under the title and date."
+---
+```
+
+Post formatting notes:
+
+- `excerpt` should be short and descriptive. It is used outside the post body, so it should work as a standalone summary.
+- `dek` can be longer than `excerpt` and should frame the argument or scope of the post, not just repeat the title.
+- Long-form post prose should read like an article, so prefer normal Markdown paragraphs and headings over homepage-style centered presentation.
+- For patches or code diffs, use fenced `diff` blocks so added and removed lines are styled correctly:
+
+```diff
+--- a/file.sol
++++ b/file.sol
+@@ -1,3 +1,3 @@
+-old line
++new line
+```
+
+- Markdown tables are supported and will render with the post table styling.
+
 ## Publication Sync
 
 Publications on the homepage are synced by [`scripts/sync_publications.py`](/Users/viviandersson/code/vivi365.github.io/scripts/sync_publications.py), with behavior documented in [`scripts/README.md`](/Users/viviandersson/code/vivi365.github.io/scripts/README.md).
