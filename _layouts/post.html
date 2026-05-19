@@ -6,6 +6,9 @@ layout: default
   <header class="post-header">
     <h1>{{ page.title }}</h1>
     <p class="post-date">{{ page.date | date: "%B %d, %Y" }}</p>
+    {% if page.dek %}
+    <p class="post-dek">{{ page.dek }}</p>
+    {% endif %}
   </header>
   <div class="post-body">
     {{ content }}
