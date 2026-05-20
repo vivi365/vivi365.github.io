@@ -66,5 +66,49 @@
     </main>
     {% endif %}
   </div>
+  <script>
+    (function () {
+      function fallbackCopy(text) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      function setCopiedState(button) {
+        button.classList.add('is-copied');
+        window.setTimeout(function () {
+          button.classList.remove('is-copied');
+        }, 1400);
+      }
+
+      document.addEventListener('click', function (event) {
+        var button = event.target.closest('.copy-citation-button');
+        if (!button) return;
+
+        var container = button.closest('.post-citation-block');
+        var code = container && container.querySelector('code');
+        if (!code) return;
+
+        var text = code.textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            setCopiedState(button);
+          }).catch(function () {
+            fallbackCopy(text);
+            setCopiedState(button);
+          });
+        } else {
+          fallbackCopy(text);
+          setCopiedState(button);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

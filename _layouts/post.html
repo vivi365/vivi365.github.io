@@ -9,11 +9,11 @@ layout: default
       <span>{{ page.date | date: "%B %d, %Y" }}</span>
       {% if page.paper_url %}
       <span class="post-date-separator">·</span>
-      <a class="post-paper-link" href="{{ page.paper_url }}" target="_blank" rel="noopener"><svg fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>{{ page.paper_label | default: "Paper" }}</a>
+      <a class="post-paper-link" href="{{ page.paper_url }}" target="_blank" rel="noopener"><svg class="post-paper-icon post-paper-icon-arxiv" fill="currentColor" stroke="currentColor" stroke-width="15"><use href="#icon-arxiv"/></svg>{{ page.paper_label | default: "Paper" }}</a>
       {% endif %}
       {% if page.artifact_url %}
       <span class="post-date-separator">·</span>
-      <a class="post-paper-link" href="{{ page.artifact_url }}" target="_blank" rel="noopener"><svg fill="currentColor"><use href="#icon-github"/></svg>{{ page.artifact_label | default: "Artifact" }}</a>
+      <a class="post-paper-link" href="{{ page.artifact_url }}" target="_blank" rel="noopener"><svg class="post-paper-icon" fill="currentColor"><use href="#icon-github"/></svg>{{ page.artifact_label | default: "Artifact" }}</a>
       {% endif %}
     </p>
     {% if page.dek %}

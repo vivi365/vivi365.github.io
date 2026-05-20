@@ -694,6 +694,13 @@ section a:hover {
   display: block;
 }
 
+.post-paper-link .post-paper-icon-arxiv {
+  width: 17px;
+  height: 17px;
+  flex-basis: 17px;
+  transform: translateY(1px);
+}
+
 .post-dek {
   max-width: 40rem;
   margin: 0.75rem auto 0;
@@ -725,6 +732,25 @@ section a:hover {
 .post-body p {
   margin-bottom: 1rem;
   text-align: left;
+}
+
+.post-body hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 2rem 0;
+}
+
+.post-body .post-references {
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.post-body .post-references p {
+  margin-bottom: 0.65rem;
+}
+
+.post-body .post-references p:last-child {
+  margin-bottom: 0;
 }
 
 .post-body ul, .post-body ol {
@@ -802,6 +828,78 @@ section a:hover {
 .post-body pre code {
   background: none;
   padding: 0;
+}
+
+.post-body .post-citation-block pre {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  margin: 0.9rem 0 1.25rem;
+}
+
+.post-body .post-citation-block pre code {
+  font-size: inherit;
+}
+
+.post-body .post-citation-block {
+  position: relative;
+}
+
+.post-body .copy-citation-button {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  z-index: 1;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0;
+  width: 1.45rem;
+  height: 1.45rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+  opacity: 0.62;
+}
+
+.post-body .copy-citation-button:hover {
+  color: var(--text-color);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.post-body .copy-citation-button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.post-body .copy-citation-button svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.post-body .copy-citation-button .copied-icon {
+  display: none;
+}
+
+.post-body .copy-citation-button.is-copied {
+  color: var(--text-secondary);
+  opacity: 1;
+}
+
+.post-body .copy-citation-button.is-copied .copy-icon {
+  display: none;
+}
+
+.post-body .copy-citation-button.is-copied .copied-icon {
+  display: block;
 }
 
 .post-body .language-diff .gd,
