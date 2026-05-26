@@ -7,7 +7,7 @@ paper_url: "https://arxiv.org/abs/2511.02780"
 paper_label: "Paper"
 artifact_url: "https://github.com/ASSERT-KTH/Proof-of-Patch/"
 artifact_label: "Dataset"
-dek: "This post is about how to evaluate whether LLM-generated proof-of-concept exploits are genuinely correct, not just superficially plausible. I explain the patch-based oracle we used in PoCo, why it gives a stronger signal than common alternatives, and what assumptions and limitations come with that choice."
+dek: "This post is about how to evaluate whether LLM-generated proof-of-concept exploits are logically correct, not simply superficially plausible. I explain the patch-based oracle we used in PoCo, why it gives a strong signal compares to alternative oracles, and what assumptions and limitations come with that choice."
 ---
 
 ## What is PoCo and the patch-based oracle
@@ -116,25 +116,25 @@ Oracle choice determines what "correct" means. The table below summarizes how di
 | **Assertion-based** (Prompt2Pwn) | Foundry assertion | No | Easy to automate | May not align with the vulnerability |
 | **Patch-based** (PoCo, EVMBench*) | Behavioral diff | No | Encodes causal change | Requires minimal trusted patch |
 
-*\*Reverse direction: in EVMBench, the PoC validates the patch. See also "Do automated fixes truly mitigate smart contract exploits?" Bobadilla, Jin, Monperrus, TSE 2025.*
+*\*Reverse direction: in EVMBench, the PoC validates the patch. See also ["Do automated fixes truly mitigate smart contract exploits?" Bobadilla, Jin, Monperrus, TSE 2025](https://arxiv.org/abs/2501.04600).*
 
-A common alternative is task-specific oracles. PoCGen, for example, uses vulnerability-type-specific checks: for command injection, it verifies whether a command was executed; for prototype pollution, it checks whether a property was added to `Object.prototype` [Simsek et al. 2025]. The clear advantage is that these can provide feedback *during* generation, not just post-hoc. But they vary in strength. For prototype pollution, as the authors note, an agent can directly assign a property to `Object.prototype` without exercising the vulnerable code path. For command injection, the oracle checks whether a specific binary can be executed, but it is not clear what prevents the agent from calling that binary directly rather than through the vulnerable code path. Task-specific oracles also require designing a check for each vulnerability type. Our dataset spans a wide range, from reentrancy to access control to logic errors, where protocol-specific invariants resist generic encoding.
+A common alternative is task-specific oracles. PoCGen, for example, uses vulnerability-type-specific checks: for command injection, it verifies whether a command was executed; for prototype pollution, it checks whether a property was added to `Object.prototype` [[Simsek et al. 2025]](https://arxiv.org/abs/2506.04962). The clear advantage is that these can provide feedback *during* generation, not just post-hoc. But they vary in strength. For prototype pollution, as the authors note, an agent can directly assign a property to `Object.prototype` without exercising the vulnerable code path. For command injection, the oracle checks whether a specific binary can be executed, but it is not clear what prevents the agent from calling that binary directly rather than through the vulnerable code path. Task-specific oracles also require designing a check for each vulnerability type. Our dataset spans a wide range, from reentrancy to access control to logic errors, where protocol-specific invariants resist generic encoding.
 
-In the smart contract domain, A1 uses money extraction as the success criterion: the agent must produce an exploit that results in net positive balance [Gervais and Zhou 2025]. This is a strong oracle for DeFi exploits with extractable value, but it does not cover governance attacks, access control violations, or DoS conditions where no funds move. It also requires deployed contracts with on-chain state; we work in the pre-deployment auditing phase, where no such state exists.
+In the smart contract domain, A1 uses money extraction as the success criterion: the agent must produce an exploit that results in net positive balance [[Gervais and Zhou 2025]](https://arxiv.org/abs/2507.05558). This is a strong oracle for DeFi exploits with extractable value, but it does not cover governance attacks, access control violations, or DoS conditions where no funds move. It also requires deployed contracts with on-chain state; we work in the pre-deployment auditing phase, where no such state exists.
 
-Prompt2Pwn takes yet another approach: the exploit must compile and pass a Foundry assertion tied to a vulnerability-class invariant [Xiao et al. 2025]. An open question is how the framework verifies that the assertion meaningfully captures the intended vulnerability.
+Prompt2Pwn takes yet another approach: the exploit must compile and pass a Foundry assertion tied to a vulnerability-class invariant [[Xiao et al. 2025]](https://arxiv.org/abs/2508.01371). An open question is how the framework verifies that the assertion meaningfully captures the intended vulnerability.
 
-Interestingly, EVMBench arrived at the same core idea we did, applied to patching rather than PoC generation: if the exploit fails after applying the fix, the fix is correct [Wang et al. 2026]. Worth noting that patch incompleteness is a bigger concern in their setting. Their oracle says "this fix blocks the known exploit," but the fix might leave alternative paths open. We ask the reverse: does the PoC exercise the behavior the patch removes?
+Interestingly, EVMBench arrived at the same core idea we did, applied to patching rather than PoC generation: if the exploit fails after applying the fix, the fix is correct [[Wang et al. 2026]](https://arxiv.org/abs/2603.04915). Worth noting that patch incompleteness is a bigger concern in their setting. Their oracle says "this fix blocks the known exploit," but the fix might leave alternative paths open. We ask the reverse: does the PoC exercise the behavior the patch removes?
 
 In summary, patch-based oracles encode a causal change that should remove the vulnerability, which makes them difficult to fool. This relies on focused patches without unrelated changes. The method requires curating verified minimal patches, provides no signal during generation, and only applies when a patch exists. In our experience, the precision justified these costs.
 
 ## Closing thoughts
 
-Evaluating agentic security tools forces you to confront what "correct" means. For PoC generation, patch-based oracles offer a strong, vulnerability-agnostic signal that is resistant to gaming in a way that symptom-based oracles are not. It is not a formal guarantee; it depends on minimal, well-curated patches and says nothing about the qualities beyond correctness.
+Evaluating agentic security tools requires defining what "correct" means. For smart contract PoC exploits, patch-based oracles offer a strong, vulnerability-agnostic signal that resists gaming in a way that symptom-based oracles may not. Yet it is not a formal guarantee; it depends on minimal, well-curated patches such as those in Proof-of-Patch.
 
-A PoC with a single assertion verifying a balance change tells you the exploit worked. A PoC with multiple assertions checking intermediate state, such as role assignment, storage changes, or control flow, tells you *how* it worked. The second is more useful to a developer trying to understand and fix the issue. We saw wide variation across models but had no ground truth for what good assertion practice looks like in generated exploits. Whether this matters depends on the deployment context: automated verification may not need human-readable output, but auditor-facing tools do.
+Correctness is only one axis. The PoCs we generate vary widely in function and style across models, and we have no ground truth for what makes an exploit useful to a human protocol stakeholder, or whether usefulness should be a criterion at all.
 
-We also lack ways to measure partial success. Some of our agents failed by exhausting their budget while on the right track, one iteration from a correct PoC. That is fundamentally different from never finding the right code path, but our evaluation treats both the same. Capturing "almost there," the kind of near-miss a human collaborator could finish, would tell us more about where these systems actually break down.
+A second missing axis is partial success. Some of our agents failed by exhausting their budget while on the right track, one iteration away from a correct PoC. That is more meaningful than never approaching a solution at all, yet a binary correct/incorrect metric equates them. Capturing "almost there," in the style of process-based rewards [[Uesato et al. 2022]](https://arxiv.org/abs/2211.14275), would tell us more about where current agentic systems struggle. As models start to saturate such benchmarks [[AISI 2026]](https://www.aisi.gov.uk/blog/how-fast-is-autonomous-ai-cyber-capability-advancing), these nuances matter more.
 
 ---
 
@@ -150,11 +150,14 @@ We also lack ways to measure partial success. Some of our agents failed by exhau
     <path d="M7 12.5l3.1 3.1L17.2 8.5"></path>
   </svg>
 </button>
-<pre><code>@article{andersson2025poco,
-  title={PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts},
-  author={Andersson, Vivi and Bobadilla, Sofia and Hobbelhagen, Harald and Monperrus, Martin},
-  journal={arXiv preprint arXiv:2511.02780},
-  year={2025}
+<pre><code>@article{andersson2026poco,
+author = {Andersson, Vivi and Bobadilla, Sofia and Hobbelhagen, Harald and Monperrus, Martin},
+title = {PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts},
+year = {2026},
+doi = {10.1145/3816704},
+note = {Just Accepted},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = may
 }</code></pre>
 </div>
 
@@ -162,11 +165,15 @@ We also lack ways to measure partial success. Some of our agents failed by exhau
 
 <div class="post-references">
 
+<p>AI Security Institute. "How fast is autonomous AI cyber capability advancing?" <em>AISI Blog</em>, May 2026.</p>
+
 <p>Bobadilla, Sofia, Monica Jin, and Martin Monperrus. "Do automated fixes truly mitigate smart contract exploits?" <em>IEEE Transactions on Software Engineering</em>, 2025.</p>
 
 <p>Gervais, Arthur, and Liyi Zhou. "AI Agent Smart Contract Exploit Generation." <em>arXiv preprint arXiv:2507.05558</em>, 2025.</p>
 
 <p>Simsek, Deniz, Aryaz Eghbali, and Michael Pradel. "PoCGen: Generating Proof-of-Concept Exploits for Vulnerabilities in npm Packages." <em>arXiv preprint arXiv:2506.04962</em>, 2025.</p>
+
+<p>Uesato, Jonathan, Nate Kushman, Ramana Kumar, et al. "Solving math word problems with process- and outcome-based feedback." <em>arXiv preprint arXiv:2211.14275</em>, 2022.</p>
 
 <p>Wang, Justin, Andreas Bigger, Xiaohai Xu, et al. "EVMbench: Evaluating AI Agents on Smart Contract Security." <em>arXiv preprint arXiv:2603.04915</em>, 2026.</p>
 
