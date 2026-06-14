@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Patches as Correctness Oracles in Smart Contract Exploit Generation"
-date: 2025-05-19
+date: 2026-05-19
 excerpt: "How we evaluated PoCo, our agentic system for generating proof-of-concept exploits for smart contract vulnerabilities, using security patches as a correctness oracle."
 paper_url: "https://arxiv.org/abs/2511.02780"
 paper_label: "Paper"
@@ -150,14 +150,12 @@ A second missing axis is partial success. Some of our agents failed by exhaustin
     <path d="M7 12.5l3.1 3.1L17.2 8.5"></path>
   </svg>
 </button>
-<pre><code>@article{andersson2026poco,
+<pre><code>@article{andersson2025poco,
 author = {Andersson, Vivi and Bobadilla, Sofia and Hobbelhagen, Harald and Monperrus, Martin},
 title = {PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts},
-year = {2026},
+year = {2025},
 doi = {10.1145/3816704},
-note = {Just Accepted},
-journal = {ACM Trans. Softw. Eng. Methodol.},
-month = may
+journal = {ACM Trans. Softw. Eng. Methodol.}
 }</code></pre>
 </div>
 
