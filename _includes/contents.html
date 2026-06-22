@@ -1,15 +1,28 @@
 {%- assign contents_title = include.title | default: page.contents_title | default: "Contents" -%}
 
 {%- if include.html -%}
-  {%- assign headings = include.html | split: '<h2 id="' -%}
+  {%- assign normalized = include.html | replace: '<h3 id="', '<h2 id="__h3__' -%}
+  {%- assign headings = normalized | split: '<h2 id="' -%}
   {%- capture contents_items -%}
     {%- for heading in headings offset:1 -%}
-      {%- assign heading_id = heading | split: '"' | first -%}
-      {%- assign heading_chunk = heading | split: '</h2>' | first -%}
-      {%- assign heading_html = heading_chunk | remove_first: heading_id | remove_first: '">' -%}
+      {%- assign heading_id_raw = heading | split: '"' | first -%}
+      {%- assign is_h3 = false -%}
+      {%- if heading_id_raw contains '__h3__' -%}
+        {%- assign is_h3 = true -%}
+        {%- assign heading_id = heading_id_raw | remove: '__h3__' -%}
+        {%- assign heading_chunk = heading | split: '</h3>' | first -%}
+      {%- else -%}
+        {%- assign heading_id = heading_id_raw -%}
+        {%- assign heading_chunk = heading | split: '</h2>' | first -%}
+      {%- endif -%}
+      {%- assign heading_html = heading_chunk | remove_first: heading_id_raw | remove_first: '">' -%}
       {%- assign heading_text = heading_html | strip_html | strip -%}
-      {%- if heading_id != "" and heading_text != "" %}
-        <li><a href="#{{ heading_id | escape }}">{{ heading_text }}</a></li>
+      {%- if heading_id != "" and heading_text != "" -%}
+        {%- if is_h3 %}
+          <li class="contents-h3"><a href="#{{ heading_id | escape }}">{{ heading_text }}</a></li>
+        {%- else %}
+          <li><a href="#{{ heading_id | escape }}">{{ heading_text }}</a></li>
+        {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
   {%- endcapture -%}
@@ -18,9 +31,15 @@
   {%- capture contents_items -%}
     {%- for line in post_lines -%}
       {%- assign stripped_line = line | strip -%}
-      {%- assign heading_prefix = stripped_line | slice: 0, 3 -%}
-      {%- assign nested_heading_prefix = stripped_line | slice: 0, 4 -%}
-      {%- if heading_prefix == "## " and nested_heading_prefix != "### " -%}
+      {%- assign h3_prefix = stripped_line | slice: 0, 4 -%}
+      {%- assign h2_prefix = stripped_line | slice: 0, 3 -%}
+      {%- if h3_prefix == "### " -%}
+        {%- assign heading_text = stripped_line | remove_first: "### " | strip -%}
+        {%- assign heading_id = heading_text | markdownify | strip_html | strip | slugify -%}
+        {%- if heading_id != "" and heading_text != "" %}
+          <li class="contents-h3"><a href="#{{ heading_id | escape }}">{{ heading_text | markdownify | strip_html | strip }}</a></li>
+        {%- endif -%}
+      {%- elsif h2_prefix == "## " -%}
         {%- assign heading_text = stripped_line | remove_first: "## " | strip -%}
         {%- assign heading_id = heading_text | markdownify | strip_html | strip | slugify -%}
         {%- if heading_id != "" and heading_text != "" %}

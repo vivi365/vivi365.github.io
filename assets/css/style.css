@@ -738,6 +738,12 @@ section a:hover {
   line-height: 1.45;
 }
 
+.post-contents li.contents-h3 {
+  padding-left: 1rem;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
 .post-contents a {
   color: var(--text-color);
   text-decoration: none;
