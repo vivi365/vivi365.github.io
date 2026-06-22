@@ -710,6 +710,44 @@ section a:hover {
   text-align: center;
 }
 
+.post-contents {
+  margin: 0 0 2rem;
+  padding: 1rem 1.1rem;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+}
+
+.post-contents h2 {
+  margin: 0 0 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f7a8f;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.post-contents ol {
+  margin: 0;
+  padding-left: 0.25rem;
+  list-style: none;
+}
+
+.post-contents li {
+  margin: 0.35rem 0;
+  line-height: 1.45;
+}
+
+.post-contents a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.post-contents a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
 .post-body {
   font-size: 0.95rem;
   line-height: 1.7;
@@ -961,6 +999,26 @@ section a:hover {
 
 .link-card:hover {
   text-decoration-color: var(--accent-color);
+}
+
+/* Callouts */
+.callout {
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 6px;
+  background: transparent;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.post-body .callout {
+  text-align: left;
+}
+
+.callout-abstract strong {
+  color: #0f7a8f;
+  font-weight: 600;
 }
 
 /* Responsive Design */

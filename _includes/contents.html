@@ -1,0 +1,42 @@
+{%- assign contents_title = include.title | default: page.contents_title | default: "Contents" -%}
+
+{%- if include.html -%}
+  {%- assign headings = include.html | split: '<h2 id="' -%}
+  {%- capture contents_items -%}
+    {%- for heading in headings offset:1 -%}
+      {%- assign heading_id = heading | split: '"' | first -%}
+      {%- assign heading_chunk = heading | split: '</h2>' | first -%}
+      {%- assign heading_html = heading_chunk | remove_first: heading_id | remove_first: '">' -%}
+      {%- assign heading_text = heading_html | strip_html | strip -%}
+      {%- if heading_id != "" and heading_text != "" %}
+        <li><a href="#{{ heading_id | escape }}">{{ heading_text }}</a></li>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+{%- else -%}
+  {%- assign post_lines = page.content | newline_to_br | split: '<br />' -%}
+  {%- capture contents_items -%}
+    {%- for line in post_lines -%}
+      {%- assign stripped_line = line | strip -%}
+      {%- assign heading_prefix = stripped_line | slice: 0, 3 -%}
+      {%- assign nested_heading_prefix = stripped_line | slice: 0, 4 -%}
+      {%- if heading_prefix == "## " and nested_heading_prefix != "### " -%}
+        {%- assign heading_text = stripped_line | remove_first: "## " | strip -%}
+        {%- assign heading_id = heading_text | markdownify | strip_html | strip | slugify -%}
+        {%- if heading_id != "" and heading_text != "" %}
+          <li><a href="#{{ heading_id | escape }}">{{ heading_text | markdownify | strip_html | strip }}</a></li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- assign contents_items = contents_items | strip -%}
+{%- if contents_items != "" %}
+<nav class="post-contents" aria-label="{{ contents_title | escape }}">
+  <h2>{{ contents_title }}</h2>
+  <ol>
+    {{ contents_items }}
+  </ol>
+</nav>
+{%- endif %}

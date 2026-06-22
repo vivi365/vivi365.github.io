@@ -20,6 +20,9 @@ layout: default
     <p class="post-dek">{{ page.dek }}</p>
     {% endif %}
   </header>
+  {% if page.contents %}
+    {% include contents.html html=content %}
+  {% endif %}
   <div class="post-body">
     {{ content }}
   </div>
