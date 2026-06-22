@@ -110,5 +110,10 @@
       });
     })();
   </script>
+  {% if page.highlight_codeql %}
+  <script src="{{ '/assets/js/highlight.min.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/highlight-codeql.js' | relative_url }}"></script>
+  <script>hljs.highlightAll();</script>
+  {% endif %}
 </body>
 </html>

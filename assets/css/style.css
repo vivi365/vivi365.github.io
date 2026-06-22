@@ -865,9 +865,43 @@ section a:hover {
   background: rgba(0, 0, 0, 0.05);
   padding: 1rem;
   border-radius: 5px;
-  overflow-x: auto;
+  overflow-x: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   margin: 1.5rem 0;
 }
+
+/* Filename tab above a code block */
+.post-body [data-filename] {
+  margin: 1.5rem 0;
+}
+
+.post-body [data-filename]::before {
+  content: attr(data-filename);
+  display: block;
+  background: rgba(0, 0, 0, 0.12);
+  padding: 0.3em 1rem;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.78em;
+  color: var(--text-secondary);
+  border-radius: 5px 5px 0 0;
+  letter-spacing: 0.02em;
+}
+
+.post-body [data-filename] pre,
+.post-body [data-filename] .highlight {
+  margin: 0;
+  border-radius: 0 0 5px 5px;
+}
+
+/* CodeQL syntax colors (highlight.js tokens, teal-background palette) */
+.post-body .hljs-keyword { color: #1a5276; font-weight: 600; }
+.post-body .hljs-built_in { color: #1a5276; }
+.post-body .hljs-string { color: #7b241c; }
+.post-body .hljs-comment { color: #717d7e; font-style: italic; }
+.post-body .hljs-number { color: #1e8449; }
+.post-body .hljs-title { color: #2874a6; font-weight: 600; }
+.post-body .hljs-type { color: #6c3483; }
 
 .post-body pre code {
   background: none;
