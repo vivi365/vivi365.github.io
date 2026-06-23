@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+{% assign post_content = content | replace_first: '<div class="footnotes" role="doc-endnotes">', '<div class="footnotes" role="doc-endnotes"><h2 class="footnotes-heading">Footnotes</h2>' %}
 
 <article class="post-content">
   <header class="post-header">
@@ -21,9 +22,9 @@ layout: default
     {% endif %}
   </header>
   {% if page.contents %}
-    {% include contents.html html=content %}
+    {% include contents.html html=post_content %}
   {% endif %}
   <div class="post-body">
-    {{ content }}
+    {{ post_content }}
   </div>
 </article>

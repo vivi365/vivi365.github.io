@@ -853,6 +853,45 @@ section a:hover {
   color: var(--link-hover-color);
 }
 
+.post-body sup {
+  line-height: 0;
+}
+
+.post-body .footnotes {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+}
+
+.post-body .footnotes-heading {
+  margin: 0 0 0.65rem;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.post-body .footnotes ol {
+  margin: 0;
+}
+
+.post-body .footnotes li {
+  margin-bottom: 0.35rem;
+  line-height: 1.55;
+}
+
+.post-body .footnotes p {
+  margin-bottom: 0.35rem;
+}
+
+.post-body a.footnote,
+.post-body a.reversefootnote {
+  text-decoration: none;
+}
+
 .post-body code {
   background: rgba(0, 0, 0, 0.05);
   padding: 0.2em 0.4em;
