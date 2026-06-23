@@ -150,12 +150,14 @@ A second missing axis is partial success. Some of our agents failed by exhaustin
     <path d="M7 12.5l3.1 3.1L17.2 8.5"></path>
   </svg>
 </button>
-<pre><code>@article{andersson2025poco,
+<pre><code>@article{andersson2026poco,
 author = {Andersson, Vivi and Bobadilla, Sofia and Hobbelhagen, Harald and Monperrus, Martin},
 title = {PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts},
-year = {2025},
+year = {2026},
 doi = {10.1145/3816704},
-journal = {ACM Trans. Softw. Eng. Methodol.}
+note = {Just Accepted},
+journal = {ACM Trans. Softw. Eng. Methodol.},
+month = may
 }</code></pre>
 </div>
 
