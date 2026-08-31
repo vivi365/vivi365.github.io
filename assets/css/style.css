@@ -538,15 +538,17 @@ section a:hover {
   margin-right: 3px;
 }
 
-/* Teaching section */
-#teaching p {
+/* Teaching and academic service entries */
+#teaching p,
+#academic-service p {
   text-align: left;
   margin-bottom: 0.5rem;
   line-height: 1.6;
   font-size: 0.9rem;
 }
 
-#teaching p strong {
+#teaching p strong,
+#academic-service p strong {
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--text-color);
@@ -556,7 +558,8 @@ section a:hover {
   padding-left: 1.5rem;
 }
 
-#teaching p strong::before {
+#teaching p strong::before,
+#academic-service p strong::before {
   content: '✦';
   position: absolute;
   left: 0;
@@ -565,8 +568,41 @@ section a:hover {
   top: 0.15rem;
 }
 
-#teaching p + p {
+#teaching p + p,
+#academic-service p + p {
   margin-top: 2.25rem;
+}
+
+#teaching h3 {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 1rem 0 0.5rem;
+  text-align: left;
+}
+
+#academic-service ul + p {
+  margin-top: 2.25rem;
+}
+
+#teaching ul,
+#academic-service ul {
+  font-size: 0.9rem;
+  margin-left: 1.5rem;
+}
+
+#teaching li,
+#academic-service li {
+  padding-left: 1.5rem;
+}
+
+#teaching li::before,
+#academic-service li::before {
+  content: '✧';
+  color: #477c78;
+  font-size: 0.9rem;
+  top: 0;
 }
 
 /* Posts list page */

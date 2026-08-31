@@ -48,9 +48,26 @@ Responsible for teaching modules on operating systems, high-level languages, vir
 
 **MSc Thesis Supervision, KTH**
 Supervisor.
-Topics on machine learning for vulnerability detection, open source software analysis, and software supply chain security.
-<br><br>Finished supervised thesis:<br>
-Ouday Ahmed, <em>An Empirical Study of Code Pre-trained Model Embeddings for Software Vulnerability Detection</em> (Feb 2026).
+Topics span AI for vulnerability detection and software security, large language model safety and alignment, malicious packages in open-source ecosystems, and secure software supply chains.
 
+### Completed Theses
+
+- Ouday Ahmed, <em>An Empirical Study of Code Pre-trained Model Embeddings for Software Vulnerability Detection</em> (Feb 2026).
+
+
+</section>
+
+<section id="academic-service" markdown="1">
+
+## Service
+
+**Program Committee**
+
+- [SECUTE 2026](https://conf.researchr.org/home/ase-2026/secute-2026) (co-located with ASE)
+- [RESAISE 2026](https://resaise.github.io/2026/) (co-located with ISSRE)
+
+**Reviewer**
+
+- <em>ACM Transactions on Software Engineering and Methodology</em> (TOSEM), 2026
 
 </section>
