@@ -19,6 +19,7 @@
 }
 
 .daily-familiar__trigger {
+  position: relative;
   display: grid;
   place-items: center;
   width: var(--daily-familiar-size);
@@ -34,6 +35,34 @@
   user-select: none;
   animation: familiar-hover 4.8s ease-in-out infinite;
   transition: filter 180ms ease;
+}
+
+.daily-familiar--sleeping .daily-familiar__trigger {
+  animation: none;
+  filter: saturate(0.88) drop-shadow(0 3px 4px rgba(23, 79, 85, 0.12));
+}
+
+.daily-familiar__sleep-indicator {
+  display: none;
+  position: absolute;
+  top: 8%;
+  right: 10%;
+  color: var(--text-secondary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.daily-familiar--sleeping .daily-familiar__sleep-indicator {
+  display: block;
+  animation: familiar-snooze 2.4s ease-in-out infinite;
+}
+
+.daily-familiar--sleeping .daily-familiar__image {
+  opacity: 0.94;
+  transform: translateY(5px) rotate(-4deg);
+  transform-origin: center bottom;
 }
 
 .daily-familiar--dragging .daily-familiar__trigger {
@@ -261,6 +290,17 @@
   }
 }
 
+@keyframes familiar-snooze {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translateY(3px) scale(0.9);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(-2px) scale(1);
+  }
+}
+
 @media (max-width: 768px) {
   .daily-familiar {
     --daily-familiar-size: 106px;
@@ -276,7 +316,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .daily-familiar,
-  .daily-familiar__trigger {
+  .daily-familiar__trigger,
+  .daily-familiar--sleeping .daily-familiar__sleep-indicator {
     animation: none;
     transition: none;
   }

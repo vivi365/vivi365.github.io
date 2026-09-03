@@ -46,6 +46,21 @@
     return values.year + "-" + values.month + "-" + values.day;
   }
 
+  function isSleepTime(date) {
+    var formatter = new Intl.DateTimeFormat("en", {
+      timeZone: cfg.dataset.timezone || "Europe/Stockholm",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    });
+    var values = {};
+    formatter.formatToParts(date).forEach(function (part) {
+      if (part.type !== "literal") values[part.type] = part.value;
+    });
+    var minutes = Number(values.hour) * 60 + Number(values.minute);
+    return minutes >= 22 * 60 + 30 || minutes < 8 * 60;
+  }
+
   function dateOrdinal(day) {
     var parts = day.split("-").map(Number);
     return Math.floor(Date.UTC(parts[0], parts[1] - 1, parts[2]) / 86400000);
@@ -116,25 +131,47 @@
   }
 
   var day = dateKey(new Date());
-  var pet = petById(store.get("daily-familiar:selected-pet")) || dailyPick(pets, day, "pet:");
+  var storedPet = petById(store.get("daily-familiar:selected-pet"));
+  var hasSelectedPet = Boolean(storedPet);
+  var pet = storedPet || dailyPick(pets, day, "pet:");
+  var sleepPet = petById("moon");
   var message = dailyPick(messages, day, "message:");
 
-  function updateLookButtons() {
+  function updateLookButtons(activePet) {
     Array.prototype.forEach.call(looks.querySelectorAll("button[data-pet-id]"), function (button) {
-      button.setAttribute("aria-pressed", String(button.dataset.petId === pet.dataset.id));
+      button.setAttribute("aria-pressed", String(button.dataset.petId === activePet.dataset.id));
     });
   }
 
-  function applyPet(nextPet, persist) {
+  function renderPet(nextPet, sleeping) {
     var imageUrl = safeImageUrl(nextPet.dataset.image);
     if (!imageUrl) return false;
-    pet = nextPet;
     image.src = imageUrl;
     image.hidden = false;
-    trigger.setAttribute("aria-label", "Open tilde: " + (pet.dataset.alt || pet.dataset.label || "small visitor") + ". Drag or use arrow keys to move her.");
-    updateLookButtons();
-    if (persist) store.set("daily-familiar:selected-pet", pet.dataset.id);
+    root.classList.toggle("daily-familiar--sleeping", sleeping);
+    if (sleeping) {
+      trigger.setAttribute("aria-label", "Wake tilde. She is sleeping until 08:00. Drag or use arrow keys to move her.");
+    } else {
+      trigger.setAttribute("aria-label", "Open tilde: " + (nextPet.dataset.alt || nextPet.dataset.label || "small visitor") + ". Drag or use arrow keys to move her.");
+    }
     return true;
+  }
+
+  function updateSleepState(date) {
+    var sleeping = Boolean(sleepPet && card.hidden && isSleepTime(date));
+    var activePet = sleeping ? sleepPet : pet;
+    updateLookButtons(activePet);
+    return renderPet(activePet, sleeping);
+  }
+
+  function applyPet(nextPet, persist) {
+    if (!safeImageUrl(nextPet.dataset.image)) return false;
+    pet = nextPet;
+    if (persist) {
+      hasSelectedPet = true;
+      store.set("daily-familiar:selected-pet", pet.dataset.id);
+    }
+    return updateSleepState(new Date());
   }
 
   pets.forEach(function (petOption) {
@@ -160,20 +197,31 @@
 
   if (!applyPet(pet, false)) return;
   label.textContent = "tilde";
-  messageText.textContent = message.dataset.text;
 
-  if (message.dataset.attribution) {
-    attribution.textContent = message.dataset.attribution;
-    attribution.hidden = false;
+  function renderMessage(nextMessage) {
+    messageText.textContent = nextMessage.dataset.text;
+    attribution.textContent = "";
+    attribution.hidden = true;
+    link.textContent = "";
+    link.hidden = true;
+    link.removeAttribute("href");
+    link.removeAttribute("rel");
+
+    if (nextMessage.dataset.attribution) {
+      attribution.textContent = nextMessage.dataset.attribution;
+      attribution.hidden = false;
+    }
+
+    var linkUrl = safeLinkUrl(nextMessage.dataset.link);
+    if (linkUrl) {
+      link.href = linkUrl;
+      link.textContent = "Read more";
+      link.hidden = false;
+      if (new URL(linkUrl).origin !== location.origin) link.rel = "noopener noreferrer";
+    }
   }
 
-  var linkUrl = safeLinkUrl(message.dataset.link);
-  if (linkUrl) {
-    link.href = linkUrl;
-    link.textContent = "Read more";
-    link.hidden = false;
-    if (new URL(linkUrl).origin !== location.origin) link.rel = "noopener noreferrer";
-  }
+  renderMessage(message);
 
   var positionKey = "daily-familiar:position";
   var dragState = null;
@@ -221,6 +269,7 @@
   function toggle(open, restoreFocus) {
     card.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
+    updateSleepState(new Date());
     if (open) {
       updateCardDirection();
       closeButton.focus();
@@ -309,6 +358,25 @@
     var rect = root.getBoundingClientRect();
     positionTilde(rect.left, rect.top, true);
   });
+
+  function scheduleSleepCheck() {
+    var now = new Date();
+    var delay = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+    window.setTimeout(function () {
+      var currentDate = new Date();
+      var currentDay = dateKey(currentDate);
+      if (currentDay !== day) {
+        day = currentDay;
+        message = dailyPick(messages, day, "message:");
+        renderMessage(message);
+        if (!hasSelectedPet) pet = dailyPick(pets, day, "pet:");
+      }
+      updateSleepState(currentDate);
+      scheduleSleepCheck();
+    }, delay);
+  }
+
+  scheduleSleepCheck();
 
   if (!seenToday) {
     store.set("daily-familiar:seen-day", day);
