@@ -116,6 +116,76 @@
     }
   }
 
+  var petBoundsCache = {};
+  var activePetImageUrl = "";
+
+  function applyPetBounds(bounds) {
+    if (!bounds || !root.offsetWidth || !root.offsetHeight) return;
+    var visibleWidth = bounds.right - bounds.left + 1;
+    var visibleHeight = bounds.bottom - bounds.top + 1;
+    var targetSize = Math.min(root.offsetWidth, root.offsetHeight) * 0.68;
+    var scale = targetSize / Math.max(visibleWidth, visibleHeight);
+    var centerX = bounds.left + visibleWidth / 2;
+    var centerY = bounds.top + visibleHeight / 2;
+    image.style.width = Math.round(bounds.canvasWidth * scale) + "px";
+    image.style.height = Math.round(bounds.canvasHeight * scale) + "px";
+    image.style.left = Math.round(root.offsetWidth / 2 - centerX * scale) + "px";
+    image.style.top = Math.round(root.offsetHeight / 2 - centerY * scale) + "px";
+  }
+
+  function measurePetBounds(imageUrl) {
+    if (image.src !== imageUrl || !image.naturalWidth || !image.naturalHeight) return;
+    try {
+      var canvas = document.createElement("canvas");
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      var context = canvas.getContext("2d", { willReadFrequently: true });
+      if (!context) return;
+      context.drawImage(image, 0, 0);
+      var pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      var left = canvas.width;
+      var top = canvas.height;
+      var right = -1;
+      var bottom = -1;
+      for (var y = 0; y < canvas.height; y += 1) {
+        for (var x = 0; x < canvas.width; x += 1) {
+          if (pixels[(y * canvas.width + x) * 4 + 3] <= 16) continue;
+          if (x < left) left = x;
+          if (x > right) right = x;
+          if (y < top) top = y;
+          if (y > bottom) bottom = y;
+        }
+      }
+      if (right < left || bottom < top) return;
+      petBoundsCache[imageUrl] = {
+        canvasWidth: canvas.width,
+        canvasHeight: canvas.height,
+        left: left,
+        top: top,
+        right: right,
+        bottom: bottom
+      };
+      if (activePetImageUrl === imageUrl) applyPetBounds(petBoundsCache[imageUrl]);
+    } catch (_) {
+      image.removeAttribute("style");
+    }
+  }
+
+  function normalizePetImage(imageUrl) {
+    activePetImageUrl = imageUrl;
+    if (petBoundsCache[imageUrl]) {
+      applyPetBounds(petBoundsCache[imageUrl]);
+      return;
+    }
+    if (image.complete) {
+      measurePetBounds(imageUrl);
+    } else {
+      image.addEventListener("load", function onPetLoad() {
+        measurePetBounds(imageUrl);
+      }, { once: true });
+    }
+  }
+
   function petById(id) {
     for (var i = 0; i < pets.length; i += 1) {
       if (pets[i].dataset.id === id) return pets[i];
@@ -155,6 +225,7 @@
     if (!imageUrl) return false;
     image.src = imageUrl;
     image.hidden = false;
+    normalizePetImage(imageUrl);
     root.classList.toggle("daily-familiar--sleeping", sleeping);
     if (sleeping) {
       var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:00." : "She is sleeping in her tree home. Drag her away to wake her.";
@@ -499,6 +570,7 @@
   home.hidden = false;
   homeForeground.hidden = false;
   root.hidden = false;
+  if (petBoundsCache[activePetImageUrl]) applyPetBounds(petBoundsCache[activePetImageUrl]);
   if (locationState === "home") {
     goHome(false);
   } else {
@@ -508,6 +580,7 @@
   syncTimeState(new Date());
 
   window.addEventListener("resize", function () {
+    if (petBoundsCache[activePetImageUrl]) applyPetBounds(petBoundsCache[activePetImageUrl]);
     if (locationState === "home" || (isSleepTime(new Date()) && picker.hidden)) {
       goHome(false);
       return;
