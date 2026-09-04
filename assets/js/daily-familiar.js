@@ -6,12 +6,17 @@
   if (!root || !bank) return;
 
   var cfg = bank.querySelector("[data-familiar-config]");
+  var homeCfg = bank.querySelector("[data-familiar-home]");
   var pets = Array.prototype.slice.call(bank.querySelectorAll("[data-familiar-pet]"));
+  var home = document.getElementById("daily-familiar-home");
+  var homeImage = home && home.querySelector(".daily-familiar-home__image");
   var trigger = root.querySelector(".daily-familiar__trigger");
   var picker = root.querySelector(".daily-familiar__picker");
   var image = root.querySelector(".daily-familiar__image");
   var looks = root.querySelector(".daily-familiar__looks");
-  if (!cfg || !pets.length || !trigger || !picker || !image || !looks) return;
+  var homeAction = root.querySelector(".daily-familiar__home-action");
+  var homeActionImage = root.querySelector(".daily-familiar__home-action-image");
+  if (!cfg || !homeCfg || !pets.length || !home || !homeImage || !trigger || !picker || !image || !looks || !homeAction || !homeActionImage) return;
 
   var store = {
     get: function (key) {
@@ -111,7 +116,17 @@
     return null;
   }
 
+  var homeUrl = safeImageUrl(homeCfg.dataset.image);
+  if (!homeUrl) return;
+  homeImage.src = homeUrl;
+  homeActionImage.src = homeUrl;
+  homeAction.setAttribute("aria-label", "Send tilde to " + (homeCfg.dataset.label || "her tree home"));
+
   var day = dateKey(new Date());
+  var positionKey = "daily-familiar:position";
+  var locationKey = "daily-familiar:location";
+  var storedLocation = store.get(locationKey);
+  var locationState = storedLocation === "home" || storedLocation === "free" ? storedLocation : (store.get(positionKey) ? "free" : "home");
   var storedPet = petById(store.get("daily-familiar:selected-pet"));
   var hasSelectedPet = Boolean(storedPet);
   var pet = storedPet || dailyPick(pets, day, "pet:");
@@ -130,7 +145,7 @@
     image.hidden = false;
     root.classList.toggle("daily-familiar--sleeping", sleeping);
     if (sleeping) {
-      trigger.setAttribute("aria-label", "Wake tilde and choose her look. She is sleeping until 08:00. Drag or use arrow keys to move her.");
+      trigger.setAttribute("aria-label", "Wake tilde and choose her look. She is sleeping in her tree home until 08:00.");
     } else {
       trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
     }
@@ -177,7 +192,6 @@
 
   if (!applyPet(pet, false)) return;
 
-  var positionKey = "daily-familiar:position";
   var dragState = null;
   var suppressClick = false;
 
@@ -207,6 +221,31 @@
     }
   }
 
+  function setLocation(nextLocation, persist) {
+    locationState = nextLocation;
+    root.classList.toggle("daily-familiar--at-home", locationState === "home");
+    if (persist) store.set(locationKey, locationState);
+  }
+
+  function homePosition() {
+    var homeRect = home.getBoundingClientRect();
+    return {
+      left: homeRect.left + homeRect.width * 0.6 - root.offsetWidth / 2,
+      top: homeRect.top + homeRect.height * 0.58 - root.offsetHeight / 2
+    };
+  }
+
+  function goHome(persist) {
+    var target = homePosition();
+    setLocation("home", persist);
+    positionTilde(target.left, target.top, persist);
+  }
+
+  function syncTimeState(date) {
+    if (isSleepTime(date) && picker.hidden) goHome(true);
+    updateSleepState(date);
+  }
+
   function restorePosition() {
     var saved = store.get(positionKey);
     if (!saved) return;
@@ -223,7 +262,11 @@
   function togglePicker(open, restoreFocus) {
     picker.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
-    updateSleepState(new Date());
+    if (open) {
+      updateSleepState(new Date());
+    } else {
+      syncTimeState(new Date());
+    }
     if (open) {
       updatePickerDirection();
       var activeLook = looks.querySelector('[aria-pressed="true"]');
@@ -231,6 +274,11 @@
     }
     if (!open && restoreFocus) trigger.focus();
   }
+
+  homeAction.addEventListener("click", function () {
+    goHome(true);
+    togglePicker(false, true);
+  });
 
   trigger.addEventListener("click", function () {
     if (suppressClick) {
@@ -242,6 +290,7 @@
 
   trigger.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
     var rect = root.getBoundingClientRect();
     dragState = {
       pointerId: event.pointerId,
@@ -269,6 +318,7 @@
     if (!dragState || event.pointerId !== dragState.pointerId) return;
     if (dragState.moved) {
       var rect = root.getBoundingClientRect();
+      setLocation("free", true);
       positionTilde(rect.left, rect.top, true);
       suppressClick = true;
     }
@@ -290,8 +340,10 @@
     var direction = directions[event.key];
     if (!direction) return;
     event.preventDefault();
+    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
     var rect = root.getBoundingClientRect();
     var step = event.shiftKey ? 24 : 10;
+    setLocation("free", true);
     positionTilde(rect.left + direction[0] * step, rect.top + direction[1] * step, true);
   });
 
@@ -306,10 +358,21 @@
   var seenToday = store.get("daily-familiar:seen-day") === day;
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!seenToday && !reduceMotion) root.classList.add("daily-familiar--pending");
+  home.hidden = false;
   root.hidden = false;
-  restorePosition();
+  if (locationState === "home") {
+    goHome(false);
+  } else {
+    setLocation("free", false);
+    restorePosition();
+  }
+  syncTimeState(new Date());
 
   window.addEventListener("resize", function () {
+    if (locationState === "home" || (isSleepTime(new Date()) && picker.hidden)) {
+      goHome(false);
+      return;
+    }
     if (!root.style.left || !root.style.top) return;
     var rect = root.getBoundingClientRect();
     positionTilde(rect.left, rect.top, true);
@@ -325,7 +388,7 @@
         day = currentDay;
         if (!hasSelectedPet) pet = dailyPick(pets, day, "pet:");
       }
-      updateSleepState(currentDate);
+      syncTimeState(currentDate);
       scheduleSleepCheck();
     }, delay);
   }

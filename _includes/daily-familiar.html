@@ -1,16 +1,23 @@
 {% assign familiar = site.data.daily_familiar %}
+<div id="daily-familiar-home" class="daily-familiar-home" hidden aria-hidden="true">
+  <img class="daily-familiar-home__image" alt="" width="512" height="512" draggable="false">
+</div>
 <aside id="daily-familiar" class="daily-familiar" hidden aria-label="tilde, daily familiar">
   <button class="daily-familiar__trigger" type="button" aria-expanded="false" aria-controls="daily-familiar-picker">
     <img class="daily-familiar__image" alt="" width="450" height="480" draggable="false" hidden>
     <span class="daily-familiar__sleep-indicator" aria-hidden="true">z</span>
     <span class="daily-familiar__sr-only">Choose tilde's look</span>
   </button>
-  <div id="daily-familiar-picker" class="daily-familiar__picker" role="group" aria-label="Choose tilde's look" hidden>
-    <div class="daily-familiar__looks"></div>
+  <div id="daily-familiar-picker" class="daily-familiar__picker" role="group" aria-label="tilde's controls" hidden>
+    <div class="daily-familiar__looks" role="group" aria-label="Choose tilde's look"></div>
+    <button class="daily-familiar__home-action" type="button" aria-label="Send tilde home">
+      <img class="daily-familiar__home-action-image" alt="" width="512" height="512" draggable="false">
+    </button>
   </div>
 </aside>
 <div id="daily-familiar-bank" hidden aria-hidden="true">
   <div data-familiar-config data-timezone="{{ familiar.timezone | default: 'Europe/Stockholm' | escape }}" data-delay-ms="{{ familiar.delay_ms | default: 1200 | escape }}"></div>
+  <div data-familiar-home data-image="{{ familiar.home.image | escape }}" data-label="{{ familiar.home.label | escape }}"></div>
   {% for pet in familiar.pets %}<div data-familiar-pet data-id="{{ pet.id | escape }}" data-image="{{ pet.image | escape }}" data-alt="{{ pet.alt | escape }}" data-label="{{ pet.label | escape }}"></div>{% endfor %}
 </div>
 <script src="{{ '/assets/js/daily-familiar.js' | relative_url }}" defer></script>

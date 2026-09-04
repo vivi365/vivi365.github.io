@@ -1,5 +1,8 @@
 timezone: Europe/Stockholm
 delay_ms: 1800
+home:
+  image: /assets/images/daily-familiar/pixel-tree-home-v1.png
+  label: tilde's tree home
 pets:
   - id: star
     image: /assets/images/daily-familiar/pixel-star-v4.png
