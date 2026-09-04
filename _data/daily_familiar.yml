@@ -1,0 +1,36 @@
+timezone: Europe/Stockholm
+delay_ms: 1800
+foods:
+  - id: fish
+    image: /assets/images/daily-familiar/food-fish-v1.png
+    label: fish
+  - id: salmon
+    image: /assets/images/daily-familiar/food-salmon-v1.png
+    label: salmon
+  - id: treat
+    image: /assets/images/daily-familiar/food-treat-v1.png
+    label: crunchy treat
+home:
+  image: /assets/images/daily-familiar/pixel-tree-home-v1.png
+  label: tilde's tree home
+pets:
+  - id: star
+    image: /assets/images/daily-familiar/pixel-star-v4.png
+    alt: A scruffy floating aqua pixel cat with a nicked ear, a fabric patch, and a small gold star charm
+    label: Star
+  - id: moon
+    image: /assets/images/daily-familiar/pixel-moon-v4.png
+    alt: A sleepy scruffy aqua pixel cat with a nicked ear, a paw wrap, and a small crescent moon
+    label: Moon
+  - id: dance
+    image: /assets/images/daily-familiar/pixel-dance-v4.png
+    alt: A scruffy aqua pixel cat dancing in a frayed coral neckerchief
+    label: Dancer
+  - id: terminal
+    image: /assets/images/daily-familiar/pixel-terminal-v4.png
+    alt: A scruffy floating aqua pixel cat with a nicked ear, a utility pouch, and a tiny terminal tag
+    label: Terminal
+  - id: rain
+    image: /assets/images/daily-familiar/pixel-rain-v4.png
+    alt: A scruffy floating aqua pixel cat in a patched mustard-yellow rain hood
+    label: Raincoat
