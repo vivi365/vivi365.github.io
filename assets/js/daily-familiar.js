@@ -8,15 +8,22 @@
   var cfg = bank.querySelector("[data-familiar-config]");
   var homeCfg = bank.querySelector("[data-familiar-home]");
   var pets = Array.prototype.slice.call(bank.querySelectorAll("[data-familiar-pet]"));
+  var foods = Array.prototype.slice.call(bank.querySelectorAll("[data-familiar-food]"));
   var home = document.getElementById("daily-familiar-home");
   var homeImage = home && home.querySelector(".daily-familiar-home__image");
+  var homeForeground = document.getElementById("daily-familiar-home-foreground");
+  var homeForegroundImage = homeForeground && homeForeground.querySelector(".daily-familiar-home-foreground__image");
   var trigger = root.querySelector(".daily-familiar__trigger");
   var picker = root.querySelector(".daily-familiar__picker");
   var image = root.querySelector(".daily-familiar__image");
   var looks = root.querySelector(".daily-familiar__looks");
+  var foodToggle = root.querySelector(".daily-familiar__food-toggle");
+  var foodToggleIcon = root.querySelector(".daily-familiar__food-toggle-icon");
+  var foodTray = root.querySelector(".daily-familiar__food-tray");
+  var reaction = root.querySelector(".daily-familiar__reaction");
   var homeAction = root.querySelector(".daily-familiar__home-action");
   var homeActionImage = root.querySelector(".daily-familiar__home-action-image");
-  if (!cfg || !homeCfg || !pets.length || !home || !homeImage || !trigger || !picker || !image || !looks || !homeAction || !homeActionImage) return;
+  if (!cfg || !homeCfg || !pets.length || foods.length !== 3 || !home || !homeImage || !homeForeground || !homeForegroundImage || !trigger || !picker || !image || !looks || !foodToggle || !foodToggleIcon || !foodTray || !reaction || !homeAction || !homeActionImage) return;
 
   var store = {
     get: function (key) {
@@ -119,6 +126,7 @@
   var homeUrl = safeImageUrl(homeCfg.dataset.image);
   if (!homeUrl) return;
   homeImage.src = homeUrl;
+  homeForegroundImage.src = homeUrl;
   homeActionImage.src = homeUrl;
   homeAction.setAttribute("aria-label", "Send tilde to " + (homeCfg.dataset.label || "her tree home"));
 
@@ -131,6 +139,11 @@
   var hasSelectedPet = Boolean(storedPet);
   var pet = storedPet || dailyPick(pets, day, "pet:");
   var sleepPet = petById("moon");
+  var manualNap = false;
+  var nearHome = false;
+  var HOME_ENTER_DISTANCE = 92;
+  var HOME_EXIT_DISTANCE = 124;
+  var feedingTimer = null;
 
   function updateLookButtons(activePet) {
     Array.prototype.forEach.call(looks.querySelectorAll("button[data-pet-id]"), function (button) {
@@ -144,8 +157,10 @@
     image.src = imageUrl;
     image.hidden = false;
     root.classList.toggle("daily-familiar--sleeping", sleeping);
+    root.classList.toggle("daily-familiar--manual-nap", sleeping && manualNap);
     if (sleeping) {
-      trigger.setAttribute("aria-label", "Wake tilde and choose her look. She is sleeping in her tree home until 08:00.");
+      var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:00." : "She is napping in her tree home.";
+      trigger.setAttribute("aria-label", "Wake tilde and choose her look. " + sleepMessage);
     } else {
       trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
     }
@@ -153,7 +168,7 @@
   }
 
   function updateSleepState(date) {
-    var sleeping = Boolean(sleepPet && picker.hidden && isSleepTime(date));
+    var sleeping = Boolean(sleepPet && picker.hidden && (isSleepTime(date) || (manualNap && locationState === "home")));
     var activePet = sleeping ? sleepPet : pet;
     updateLookButtons(activePet);
     return renderPet(activePet, sleeping);
@@ -190,6 +205,65 @@
     looks.appendChild(button);
   });
 
+  function clearReaction() {
+    window.clearTimeout(feedingTimer);
+    feedingTimer = null;
+    root.classList.remove("daily-familiar--fed");
+    while (reaction.firstChild) reaction.removeChild(reaction.firstChild);
+  }
+
+  function feed(foodOption) {
+    var foodUrl = safeImageUrl(foodOption.dataset.image);
+    if (!foodUrl) return;
+    clearReaction();
+    var foodImage = document.createElement("img");
+    foodImage.src = foodUrl;
+    foodImage.alt = "";
+    foodImage.draggable = false;
+    reaction.appendChild(foodImage);
+    window.requestAnimationFrame(function () {
+      root.classList.add("daily-familiar--fed");
+    });
+    feedingTimer = window.setTimeout(clearReaction, 1000);
+  }
+
+  function toggleFoodTray(open, focusToggle) {
+    foodTray.hidden = !open;
+    foodToggle.setAttribute("aria-expanded", String(open));
+    if (open) {
+      var firstFood = foodTray.querySelector("button");
+      if (firstFood) firstFood.focus();
+    } else if (focusToggle) {
+      foodToggle.focus();
+    }
+  }
+
+  var seenFoodIds = {};
+  foods.forEach(function (foodOption, index) {
+    var foodId = foodOption.dataset.id;
+    var foodUrl = safeImageUrl(foodOption.dataset.image);
+    if (!foodId || seenFoodIds[foodId] || !foodUrl) return;
+    seenFoodIds[foodId] = true;
+    var button = document.createElement("button");
+    var thumbnail = document.createElement("img");
+    button.type = "button";
+    button.className = "daily-familiar__food";
+    button.setAttribute("aria-label", "Give tilde " + (foodOption.dataset.label || foodId));
+    thumbnail.src = foodUrl;
+    thumbnail.alt = "";
+    thumbnail.loading = "lazy";
+    thumbnail.draggable = false;
+    button.appendChild(thumbnail);
+    button.addEventListener("click", function () {
+      feed(foodOption);
+      toggleFoodTray(false, true);
+    });
+    foodTray.appendChild(button);
+    if (index === 0) foodToggleIcon.src = foodUrl;
+  });
+
+  if (Object.keys(seenFoodIds).length !== 3) return;
+
   if (!applyPet(pet, false)) return;
 
   var dragState = null;
@@ -224,6 +298,7 @@
   function setLocation(nextLocation, persist) {
     locationState = nextLocation;
     root.classList.toggle("daily-familiar--at-home", locationState === "home");
+    homeForeground.classList.toggle("daily-familiar-home-foreground--active", locationState === "home");
     if (persist) store.set(locationKey, locationState);
   }
 
@@ -235,10 +310,36 @@
     };
   }
 
+  function homeDistance() {
+    var target = homePosition();
+    var rect = root.getBoundingClientRect();
+    var catCenterX = rect.left + rect.width / 2;
+    var catCenterY = rect.top + rect.height / 2;
+    var homeCenterX = target.left + root.offsetWidth / 2;
+    var homeCenterY = target.top + root.offsetHeight / 2;
+    return Math.hypot(catCenterX - homeCenterX, catCenterY - homeCenterY);
+  }
+
+  function updateHomeProximity() {
+    var distance = homeDistance();
+    if (nearHome) {
+      if (distance > HOME_EXIT_DISTANCE) nearHome = false;
+    } else if (distance <= HOME_ENTER_DISTANCE) {
+      nearHome = true;
+    }
+    root.classList.toggle("daily-familiar--near-home", nearHome);
+    home.classList.toggle("daily-familiar-home--ready", nearHome);
+    homeForeground.classList.toggle("daily-familiar-home-foreground--active", nearHome || locationState === "home");
+    return distance;
+  }
+
   function goHome(persist) {
     var target = homePosition();
     setLocation("home", persist);
     positionTilde(target.left, target.top, persist);
+    nearHome = false;
+    root.classList.remove("daily-familiar--near-home");
+    home.classList.remove("daily-familiar-home--ready");
   }
 
   function syncTimeState(date) {
@@ -260,8 +361,13 @@
   }
 
   function togglePicker(open, restoreFocus) {
+    if (open && manualNap) {
+      manualNap = false;
+      root.classList.remove("daily-familiar--manual-nap");
+    }
     picker.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
+    if (!open && !foodTray.hidden) toggleFoodTray(false, false);
     if (open) {
       updateSleepState(new Date());
     } else {
@@ -276,8 +382,13 @@
   }
 
   homeAction.addEventListener("click", function () {
+    manualNap = true;
     goHome(true);
     togglePicker(false, true);
+  });
+
+  foodToggle.addEventListener("click", function () {
+    toggleFoodTray(foodTray.hidden, false);
   });
 
   trigger.addEventListener("click", function () {
@@ -290,7 +401,7 @@
 
   trigger.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
+    if (sleepPet && picker.hidden && (isSleepTime(new Date()) || manualNap)) return;
     var rect = root.getBoundingClientRect();
     dragState = {
       pointerId: event.pointerId,
@@ -311,6 +422,7 @@
     if (!dragState.moved && Math.hypot(deltaX, deltaY) > 5) dragState.moved = true;
     if (!dragState.moved) return;
     positionTilde(dragState.left + deltaX, dragState.top + deltaY, false);
+    updateHomeProximity();
     event.preventDefault();
   });
 
@@ -318,8 +430,18 @@
     if (!dragState || event.pointerId !== dragState.pointerId) return;
     if (dragState.moved) {
       var rect = root.getBoundingClientRect();
-      setLocation("free", true);
-      positionTilde(rect.left, rect.top, true);
+      if (nearHome) {
+        manualNap = true;
+        goHome(true);
+      } else {
+        manualNap = false;
+        setLocation("free", true);
+        positionTilde(rect.left, rect.top, true);
+      }
+      nearHome = false;
+      root.classList.remove("daily-familiar--near-home");
+      home.classList.remove("daily-familiar-home--ready");
+      updateSleepState(new Date());
       suppressClick = true;
     }
     dragState = null;
@@ -327,9 +449,25 @@
     try { trigger.releasePointerCapture(event.pointerId); } catch (_) {}
   }
 
+  function cancelDrag(event) {
+    if (!dragState || event.pointerId !== dragState.pointerId) return;
+    if (dragState.moved) {
+      var rect = root.getBoundingClientRect();
+      manualNap = false;
+      setLocation("free", true);
+      positionTilde(rect.left, rect.top, true);
+      updateSleepState(new Date());
+    }
+    nearHome = false;
+    root.classList.remove("daily-familiar--near-home");
+    home.classList.remove("daily-familiar-home--ready");
+    dragState = null;
+    root.classList.remove("daily-familiar--dragging");
+  }
+
   trigger.addEventListener("pointerup", finishDrag);
-  trigger.addEventListener("pointercancel", finishDrag);
-  trigger.addEventListener("lostpointercapture", finishDrag);
+  trigger.addEventListener("pointercancel", cancelDrag);
+  trigger.addEventListener("lostpointercapture", cancelDrag);
   trigger.addEventListener("keydown", function (event) {
     var directions = {
       ArrowLeft: [-1, 0],
@@ -340,9 +478,10 @@
     var direction = directions[event.key];
     if (!direction) return;
     event.preventDefault();
-    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
+    if (sleepPet && picker.hidden && (isSleepTime(new Date()) || manualNap)) return;
     var rect = root.getBoundingClientRect();
     var step = event.shiftKey ? 24 : 10;
+    manualNap = false;
     setLocation("free", true);
     positionTilde(rect.left + direction[0] * step, rect.top + direction[1] * step, true);
   });
@@ -352,13 +491,19 @@
   });
 
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && !picker.hidden) togglePicker(false, true);
+    if (event.key !== "Escape") return;
+    if (!foodTray.hidden) {
+      toggleFoodTray(false, true);
+    } else if (!picker.hidden) {
+      togglePicker(false, true);
+    }
   });
 
   var seenToday = store.get("daily-familiar:seen-day") === day;
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!seenToday && !reduceMotion) root.classList.add("daily-familiar--pending");
   home.hidden = false;
+  homeForeground.hidden = false;
   root.hidden = false;
   if (locationState === "home") {
     goHome(false);

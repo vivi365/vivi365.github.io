@@ -1,5 +1,15 @@
 timezone: Europe/Stockholm
 delay_ms: 1800
+foods:
+  - id: fish
+    image: /assets/images/daily-familiar/food-fish-v1.png
+    label: fish
+  - id: salmon
+    image: /assets/images/daily-familiar/food-salmon-v1.png
+    label: salmon
+  - id: treat
+    image: /assets/images/daily-familiar/food-treat-v1.png
+    label: crunchy treat
 home:
   image: /assets/images/daily-familiar/pixel-tree-home-v1.png
   label: tilde's tree home
