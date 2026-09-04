@@ -139,7 +139,6 @@
   var hasSelectedPet = Boolean(storedPet);
   var pet = storedPet || dailyPick(pets, day, "pet:");
   var sleepPet = petById("moon");
-  var manualNap = false;
   var nearHome = false;
   var HOME_ENTER_DISTANCE = 92;
   var HOME_EXIT_DISTANCE = 124;
@@ -157,9 +156,8 @@
     image.src = imageUrl;
     image.hidden = false;
     root.classList.toggle("daily-familiar--sleeping", sleeping);
-    root.classList.toggle("daily-familiar--manual-nap", sleeping && manualNap);
     if (sleeping) {
-      var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:00." : "She is napping in her tree home.";
+      var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:00." : "She is sleeping in her tree home. Drag her away to wake her.";
       trigger.setAttribute("aria-label", "Wake tilde and choose her look. " + sleepMessage);
     } else {
       trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
@@ -168,7 +166,7 @@
   }
 
   function updateSleepState(date) {
-    var sleeping = Boolean(sleepPet && picker.hidden && (isSleepTime(date) || (manualNap && locationState === "home")));
+    var sleeping = Boolean(sleepPet && picker.hidden && (isSleepTime(date) || locationState === "home"));
     var activePet = sleeping ? sleepPet : pet;
     updateLookButtons(activePet);
     return renderPet(activePet, sleeping);
@@ -361,10 +359,6 @@
   }
 
   function togglePicker(open, restoreFocus) {
-    if (open && manualNap) {
-      manualNap = false;
-      root.classList.remove("daily-familiar--manual-nap");
-    }
     picker.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
     if (!open && !foodTray.hidden) toggleFoodTray(false, false);
@@ -382,7 +376,6 @@
   }
 
   homeAction.addEventListener("click", function () {
-    manualNap = true;
     goHome(true);
     togglePicker(false, true);
   });
@@ -401,7 +394,7 @@
 
   trigger.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (sleepPet && picker.hidden && (isSleepTime(new Date()) || manualNap)) return;
+    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
     var rect = root.getBoundingClientRect();
     dragState = {
       pointerId: event.pointerId,
@@ -421,6 +414,10 @@
     var deltaY = event.clientY - dragState.startY;
     if (!dragState.moved && Math.hypot(deltaX, deltaY) > 5) dragState.moved = true;
     if (!dragState.moved) return;
+    if (locationState === "home") {
+      setLocation("free", false);
+      updateSleepState(new Date());
+    }
     positionTilde(dragState.left + deltaX, dragState.top + deltaY, false);
     updateHomeProximity();
     event.preventDefault();
@@ -431,10 +428,8 @@
     if (dragState.moved) {
       var rect = root.getBoundingClientRect();
       if (nearHome) {
-        manualNap = true;
         goHome(true);
       } else {
-        manualNap = false;
         setLocation("free", true);
         positionTilde(rect.left, rect.top, true);
       }
@@ -453,7 +448,6 @@
     if (!dragState || event.pointerId !== dragState.pointerId) return;
     if (dragState.moved) {
       var rect = root.getBoundingClientRect();
-      manualNap = false;
       setLocation("free", true);
       positionTilde(rect.left, rect.top, true);
       updateSleepState(new Date());
@@ -478,12 +472,12 @@
     var direction = directions[event.key];
     if (!direction) return;
     event.preventDefault();
-    if (sleepPet && picker.hidden && (isSleepTime(new Date()) || manualNap)) return;
+    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
     var rect = root.getBoundingClientRect();
     var step = event.shiftKey ? 24 : 10;
-    manualNap = false;
     setLocation("free", true);
     positionTilde(rect.left + direction[0] * step, rect.top + direction[1] * step, true);
+    updateSleepState(new Date());
   });
 
   document.addEventListener("pointerdown", function (event) {
