@@ -11,8 +11,6 @@
   var foods = Array.prototype.slice.call(bank.querySelectorAll("[data-familiar-food]"));
   var home = document.getElementById("daily-familiar-home");
   var homeImage = home && home.querySelector(".daily-familiar-home__image");
-  var homeForeground = document.getElementById("daily-familiar-home-foreground");
-  var homeForegroundImage = homeForeground && homeForeground.querySelector(".daily-familiar-home-foreground__image");
   var trigger = root.querySelector(".daily-familiar__trigger");
   var picker = root.querySelector(".daily-familiar__picker");
   var image = root.querySelector(".daily-familiar__image");
@@ -21,7 +19,7 @@
   var reaction = root.querySelector(".daily-familiar__reaction");
   var homeAction = root.querySelector(".daily-familiar__home-action");
   var homeActionImage = root.querySelector(".daily-familiar__home-action-image");
-  if (!cfg || !homeCfg || !pets.length || foods.length !== 3 || !home || !homeImage || !homeForeground || !homeForegroundImage || !trigger || !picker || !image || !looks || !foodTray || !reaction || !homeAction || !homeActionImage) return;
+  if (!cfg || !homeCfg || !pets.length || foods.length !== 3 || !home || !homeImage || !trigger || !picker || !image || !looks || !foodTray || !reaction || !homeAction || !homeActionImage) return;
 
   var store = {
     get: function (key) {
@@ -194,7 +192,6 @@
   var homeUrl = safeImageUrl(homeCfg.dataset.image);
   if (!homeUrl) return;
   homeImage.src = homeUrl;
-  homeForegroundImage.src = homeUrl;
   homeActionImage.src = homeUrl;
   homeAction.setAttribute("aria-label", "Send tilde to " + (homeCfg.dataset.label || "her tree home"));
 
@@ -352,7 +349,6 @@
   function setLocation(nextLocation, persist) {
     locationState = nextLocation;
     root.classList.toggle("daily-familiar--at-home", locationState === "home");
-    homeForeground.classList.toggle("daily-familiar-home-foreground--active", locationState === "home");
     if (persist) store.set(locationKey, locationState);
   }
 
@@ -360,7 +356,7 @@
     var homeRect = home.getBoundingClientRect();
     return {
       left: homeRect.left + homeRect.width * 0.6 - root.offsetWidth / 2,
-      top: homeRect.top + homeRect.height * 0.58 - root.offsetHeight / 2
+      top: homeRect.top + homeRect.height * 0.52 - root.offsetHeight / 2
     };
   }
 
@@ -383,7 +379,6 @@
     }
     root.classList.toggle("daily-familiar--near-home", nearHome);
     home.classList.toggle("daily-familiar-home--ready", nearHome);
-    homeForeground.classList.toggle("daily-familiar-home-foreground--active", locationState === "home");
     return distance;
   }
 
@@ -544,7 +539,6 @@
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!seenToday && !reduceMotion) root.classList.add("daily-familiar--pending");
   home.hidden = false;
-  homeForeground.hidden = false;
   root.hidden = false;
   if (petBoundsCache[activePetImageUrl]) applyPetBounds(petBoundsCache[activePetImageUrl]);
   if (locationState === "home") {
