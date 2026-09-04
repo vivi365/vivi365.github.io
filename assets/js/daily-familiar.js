@@ -383,7 +383,7 @@
     }
     root.classList.toggle("daily-familiar--near-home", nearHome);
     home.classList.toggle("daily-familiar-home--ready", nearHome);
-    homeForeground.classList.toggle("daily-familiar-home-foreground--active", nearHome || locationState === "home");
+    homeForeground.classList.toggle("daily-familiar-home-foreground--active", locationState === "home");
     return distance;
   }
 
