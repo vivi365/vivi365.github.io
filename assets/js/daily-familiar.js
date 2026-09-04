@@ -227,7 +227,7 @@
     root.classList.toggle("daily-familiar--sleeping", sleeping);
     if (sleeping) {
       var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:00." : "She is sleeping in her tree home. Drag her away to wake her.";
-      trigger.setAttribute("aria-label", "Wake tilde and choose her look. " + sleepMessage);
+      trigger.setAttribute("aria-label", "Open tilde's controls. " + sleepMessage);
     } else {
       trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
     }
@@ -235,7 +235,7 @@
   }
 
   function updateSleepState(date) {
-    var sleeping = Boolean(sleepPet && picker.hidden && (isSleepTime(date) || locationState === "home"));
+    var sleeping = Boolean(sleepPet && (isSleepTime(date) || locationState === "home"));
     var activePet = sleeping ? sleepPet : pet;
     updateLookButtons(activePet);
     return renderPet(activePet, sleeping);
@@ -397,7 +397,7 @@
   }
 
   function syncTimeState(date) {
-    if (isSleepTime(date) && picker.hidden) goHome(true);
+    if (isSleepTime(date)) goHome(true);
     updateSleepState(date);
   }
 
@@ -445,7 +445,7 @@
 
   trigger.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
+    if (sleepPet && isSleepTime(new Date())) return;
     var rect = root.getBoundingClientRect();
     dragState = {
       pointerId: event.pointerId,
@@ -523,7 +523,7 @@
     var direction = directions[event.key];
     if (!direction) return;
     event.preventDefault();
-    if (sleepPet && picker.hidden && isSleepTime(new Date())) return;
+    if (sleepPet && isSleepTime(new Date())) return;
     var rect = root.getBoundingClientRect();
     var step = event.shiftKey ? 24 : 10;
     setLocation("free", true);
@@ -557,7 +557,7 @@
 
   window.addEventListener("resize", function () {
     if (petBoundsCache[activePetImageUrl]) applyPetBounds(petBoundsCache[activePetImageUrl]);
-    if (locationState === "home" || (isSleepTime(new Date()) && picker.hidden)) {
+    if (locationState === "home" || isSleepTime(new Date())) {
       goHome(false);
       return;
     }
