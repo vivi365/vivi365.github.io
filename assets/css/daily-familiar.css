@@ -127,7 +127,6 @@
 
 .daily-familiar__trigger:focus-visible,
 .daily-familiar__look:focus-visible,
-.daily-familiar__food-toggle:focus-visible,
 .daily-familiar__food:focus-visible,
 .daily-familiar__home-action:focus-visible {
   outline: 2px solid var(--accent-color);
@@ -187,8 +186,7 @@
   background: var(--card-bg);
   box-shadow: var(--shadow-sm);
   backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
+  display: grid;
   gap: 0.3rem;
 }
 
@@ -214,7 +212,6 @@
 }
 
 .daily-familiar__look,
-.daily-familiar__food-toggle,
 .daily-familiar__food,
 .daily-familiar__home-action {
   width: 2.75rem;
@@ -227,55 +224,28 @@
 }
 
 .daily-familiar__look:hover,
-.daily-familiar__food-toggle:hover,
 .daily-familiar__food:hover,
 .daily-familiar__home-action:hover {
   border-color: rgba(35, 86, 90, 0.55);
   background: rgba(22, 160, 133, 0.08);
 }
 
-.daily-familiar__food-toggle {
-  position: absolute;
-  top: calc(100% - 1px);
-  right: 3.15rem;
-  width: 2.75rem;
-  height: 2.35rem;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-  box-shadow: var(--shadow-sm);
-}
-
-.daily-familiar__food-toggle-icon {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  image-rendering: pixelated;
-  pointer-events: none;
+.daily-familiar__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid var(--card-border);
 }
 
 .daily-familiar__food-tray {
-  position: absolute;
-  top: calc(100% + 2.7rem);
-  right: 2.7rem;
   display: flex;
   gap: 0.3rem;
-  width: max-content;
-  padding: 0.35rem;
-  border: 1px solid var(--card-border);
-  border-radius: 4px;
-  background: var(--card-bg);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(8px);
-}
-
-.daily-familiar__food-tray[hidden] {
-  display: none;
 }
 
 .daily-familiar__food {
-  width: 2.5rem;
-  height: 2.5rem;
+  flex: 0 0 auto;
 }
 
 .daily-familiar__food img {
@@ -285,35 +255,6 @@
   object-fit: contain;
   image-rendering: pixelated;
   pointer-events: none;
-}
-
-.daily-familiar--anchor-below .daily-familiar__food-toggle {
-  top: auto;
-  bottom: calc(100% - 1px);
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.daily-familiar--anchor-below .daily-familiar__food-tray {
-  top: auto;
-  bottom: calc(100% + 2.7rem);
-}
-
-.daily-familiar__home-action {
-  position: relative;
-  margin-left: 0.15rem;
-}
-
-.daily-familiar__home-action::before {
-  position: absolute;
-  top: 0.35rem;
-  bottom: 0.35rem;
-  left: -0.4rem;
-  width: 1px;
-  background: var(--card-border);
-  content: "";
 }
 
 .daily-familiar__look[aria-pressed="true"] {

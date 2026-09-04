@@ -17,13 +17,11 @@
   var picker = root.querySelector(".daily-familiar__picker");
   var image = root.querySelector(".daily-familiar__image");
   var looks = root.querySelector(".daily-familiar__looks");
-  var foodToggle = root.querySelector(".daily-familiar__food-toggle");
-  var foodToggleIcon = root.querySelector(".daily-familiar__food-toggle-icon");
   var foodTray = root.querySelector(".daily-familiar__food-tray");
   var reaction = root.querySelector(".daily-familiar__reaction");
   var homeAction = root.querySelector(".daily-familiar__home-action");
   var homeActionImage = root.querySelector(".daily-familiar__home-action-image");
-  if (!cfg || !homeCfg || !pets.length || foods.length !== 3 || !home || !homeImage || !homeForeground || !homeForegroundImage || !trigger || !picker || !image || !looks || !foodToggle || !foodToggleIcon || !foodTray || !reaction || !homeAction || !homeActionImage) return;
+  if (!cfg || !homeCfg || !pets.length || foods.length !== 3 || !home || !homeImage || !homeForeground || !homeForegroundImage || !trigger || !picker || !image || !looks || !foodTray || !reaction || !homeAction || !homeActionImage) return;
 
   var store = {
     get: function (key) {
@@ -296,19 +294,8 @@
     feedingTimer = window.setTimeout(clearReaction, 1000);
   }
 
-  function toggleFoodTray(open, focusToggle) {
-    foodTray.hidden = !open;
-    foodToggle.setAttribute("aria-expanded", String(open));
-    if (open) {
-      var firstFood = foodTray.querySelector("button");
-      if (firstFood) firstFood.focus();
-    } else if (focusToggle) {
-      foodToggle.focus();
-    }
-  }
-
   var seenFoodIds = {};
-  foods.forEach(function (foodOption, index) {
+  foods.forEach(function (foodOption) {
     var foodId = foodOption.dataset.id;
     var foodUrl = safeImageUrl(foodOption.dataset.image);
     if (!foodId || seenFoodIds[foodId] || !foodUrl) return;
@@ -325,10 +312,8 @@
     button.appendChild(thumbnail);
     button.addEventListener("click", function () {
       feed(foodOption);
-      toggleFoodTray(false, true);
     });
     foodTray.appendChild(button);
-    if (index === 0) foodToggleIcon.src = foodUrl;
   });
 
   if (Object.keys(seenFoodIds).length !== 3) return;
@@ -432,7 +417,6 @@
   function togglePicker(open, restoreFocus) {
     picker.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
-    if (!open && !foodTray.hidden) toggleFoodTray(false, false);
     if (open) {
       updateSleepState(new Date());
     } else {
@@ -449,10 +433,6 @@
   homeAction.addEventListener("click", function () {
     goHome(true);
     togglePicker(false, true);
-  });
-
-  foodToggle.addEventListener("click", function () {
-    toggleFoodTray(foodTray.hidden, false);
   });
 
   trigger.addEventListener("click", function () {
@@ -557,11 +537,7 @@
 
   document.addEventListener("keydown", function (event) {
     if (event.key !== "Escape") return;
-    if (!foodTray.hidden) {
-      toggleFoodTray(false, true);
-    } else if (!picker.hidden) {
-      togglePicker(false, true);
-    }
+    if (!picker.hidden) togglePicker(false, true);
   });
 
   var seenToday = store.get("daily-familiar:seen-day") === day;

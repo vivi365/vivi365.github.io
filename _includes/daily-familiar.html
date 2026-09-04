@@ -14,14 +14,12 @@
   </button>
   <div id="daily-familiar-picker" class="daily-familiar__picker" role="group" aria-label="tilde's controls" hidden>
     <div class="daily-familiar__looks" role="group" aria-label="Choose tilde's look"></div>
-    <button class="daily-familiar__food-toggle" type="button" aria-expanded="false" aria-controls="daily-familiar-food-tray">
-      <img class="daily-familiar__food-toggle-icon" alt="" width="512" height="512" draggable="false">
-      <span class="daily-familiar__sr-only">Feed tilde</span>
-    </button>
-    <div id="daily-familiar-food-tray" class="daily-familiar__food-tray" role="group" aria-label="Choose food for tilde" hidden></div>
-    <button class="daily-familiar__home-action" type="button" aria-label="Send tilde home">
-      <img class="daily-familiar__home-action-image" alt="" width="512" height="512" draggable="false">
-    </button>
+    <div class="daily-familiar__actions">
+      <div id="daily-familiar-food-tray" class="daily-familiar__food-tray" role="group" aria-label="Feed tilde"></div>
+      <button class="daily-familiar__home-action" type="button" aria-label="Send tilde home">
+        <img class="daily-familiar__home-action-image" alt="" width="512" height="512" draggable="false">
+      </button>
+    </div>
   </div>
 </aside>
 <div id="daily-familiar-bank" hidden aria-hidden="true">
