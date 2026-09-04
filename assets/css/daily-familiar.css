@@ -5,11 +5,8 @@
   bottom: calc(clamp(0.75rem, 2vh, 1.5rem) + env(safe-area-inset-bottom, 0px));
   width: var(--daily-familiar-home-size);
   height: var(--daily-familiar-home-size);
-  pointer-events: none;
-}
-
-.daily-familiar-home {
   z-index: 19;
+  pointer-events: none;
 }
 
 .daily-familiar-home[hidden] {
