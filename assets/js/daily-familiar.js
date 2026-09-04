@@ -1,24 +1,17 @@
 (function () {
   "use strict";
+
   var root = document.getElementById("daily-familiar");
   var bank = document.getElementById("daily-familiar-bank");
   if (!root || !bank) return;
 
   var cfg = bank.querySelector("[data-familiar-config]");
   var pets = Array.prototype.slice.call(bank.querySelectorAll("[data-familiar-pet]"));
-  var messages = Array.prototype.slice.call(bank.querySelectorAll("[data-familiar-message]"));
-  if (!cfg || !pets.length || !messages.length) return;
-
   var trigger = root.querySelector(".daily-familiar__trigger");
-  var card = root.querySelector(".daily-familiar__card");
-  var closeButton = root.querySelector(".daily-familiar__close");
+  var picker = root.querySelector(".daily-familiar__picker");
   var image = root.querySelector(".daily-familiar__image");
-  var label = root.querySelector(".daily-familiar__label");
-  var messageText = root.querySelector(".daily-familiar__text");
-  var attribution = root.querySelector(".daily-familiar__attribution");
-  var link = root.querySelector(".daily-familiar__link");
   var looks = root.querySelector(".daily-familiar__looks");
-  if (!trigger || !card || !closeButton || !image || !label || !messageText || !looks) return;
+  if (!cfg || !pets.length || !trigger || !picker || !image || !looks) return;
 
   var store = {
     get: function (key) {
@@ -32,30 +25,31 @@
     }
   };
 
-  function dateKey(date) {
-    var formatter = new Intl.DateTimeFormat("en", {
-      timeZone: cfg.dataset.timezone || "Europe/Stockholm",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
+  function zonedParts(date, options) {
+    var formatter = new Intl.DateTimeFormat("en", Object.assign({
+      timeZone: cfg.dataset.timezone || "Europe/Stockholm"
+    }, options));
     var values = {};
     formatter.formatToParts(date).forEach(function (part) {
       if (part.type !== "literal") values[part.type] = part.value;
+    });
+    return values;
+  }
+
+  function dateKey(date) {
+    var values = zonedParts(date, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
     });
     return values.year + "-" + values.month + "-" + values.day;
   }
 
   function isSleepTime(date) {
-    var formatter = new Intl.DateTimeFormat("en", {
-      timeZone: cfg.dataset.timezone || "Europe/Stockholm",
+    var values = zonedParts(date, {
       hour: "2-digit",
       minute: "2-digit",
       hourCycle: "h23"
-    });
-    var values = {};
-    formatter.formatToParts(date).forEach(function (part) {
-      if (part.type !== "literal") values[part.type] = part.value;
     });
     var minutes = Number(values.hour) * 60 + Number(values.minute);
     return minutes >= 22 * 60 + 30 || minutes < 8 * 60;
@@ -110,19 +104,6 @@
     }
   }
 
-  function safeLinkUrl(value) {
-    if (!value) return "";
-    var candidate = value.trim();
-    if (candidate.slice(0, 2) === "//" || hasControlCharacters(candidate)) return "";
-    try {
-      var parsed = new URL(candidate, location.href);
-      if (candidate.charAt(0) === "/" && parsed.origin === location.origin) return parsed.href;
-      return parsed.protocol === "https:" ? parsed.href : "";
-    } catch (_) {
-      return "";
-    }
-  }
-
   function petById(id) {
     for (var i = 0; i < pets.length; i += 1) {
       if (pets[i].dataset.id === id) return pets[i];
@@ -135,7 +116,6 @@
   var hasSelectedPet = Boolean(storedPet);
   var pet = storedPet || dailyPick(pets, day, "pet:");
   var sleepPet = petById("moon");
-  var message = dailyPick(messages, day, "message:");
 
   function updateLookButtons(activePet) {
     Array.prototype.forEach.call(looks.querySelectorAll("button[data-pet-id]"), function (button) {
@@ -150,15 +130,15 @@
     image.hidden = false;
     root.classList.toggle("daily-familiar--sleeping", sleeping);
     if (sleeping) {
-      trigger.setAttribute("aria-label", "Wake tilde. She is sleeping until 08:00. Drag or use arrow keys to move her.");
+      trigger.setAttribute("aria-label", "Wake tilde and choose her look. She is sleeping until 08:00. Drag or use arrow keys to move her.");
     } else {
-      trigger.setAttribute("aria-label", "Open tilde: " + (nextPet.dataset.alt || nextPet.dataset.label || "small visitor") + ". Drag or use arrow keys to move her.");
+      trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
     }
     return true;
   }
 
   function updateSleepState(date) {
-    var sleeping = Boolean(sleepPet && card.hidden && isSleepTime(date));
+    var sleeping = Boolean(sleepPet && picker.hidden && isSleepTime(date));
     var activePet = sleeping ? sleepPet : pet;
     updateLookButtons(activePet);
     return renderPet(activePet, sleeping);
@@ -196,32 +176,6 @@
   });
 
   if (!applyPet(pet, false)) return;
-  label.textContent = "tilde";
-
-  function renderMessage(nextMessage) {
-    messageText.textContent = nextMessage.dataset.text;
-    attribution.textContent = "";
-    attribution.hidden = true;
-    link.textContent = "";
-    link.hidden = true;
-    link.removeAttribute("href");
-    link.removeAttribute("rel");
-
-    if (nextMessage.dataset.attribution) {
-      attribution.textContent = nextMessage.dataset.attribution;
-      attribution.hidden = false;
-    }
-
-    var linkUrl = safeLinkUrl(nextMessage.dataset.link);
-    if (linkUrl) {
-      link.href = linkUrl;
-      link.textContent = "Read more";
-      link.hidden = false;
-      if (new URL(linkUrl).origin !== location.origin) link.rel = "noopener noreferrer";
-    }
-  }
-
-  renderMessage(message);
 
   var positionKey = "daily-familiar:position";
   var dragState = null;
@@ -231,11 +185,11 @@
     return Math.min(Math.max(value, minimum), Math.max(minimum, maximum));
   }
 
-  function updateCardDirection() {
+  function updatePickerDirection() {
     var rect = root.getBoundingClientRect();
-    var cardHeight = card.hidden ? 170 : card.offsetHeight;
+    var pickerHeight = picker.hidden ? 56 : picker.offsetHeight;
     root.classList.toggle("daily-familiar--anchor-left", rect.left + rect.width / 2 < window.innerWidth / 2);
-    root.classList.toggle("daily-familiar--anchor-below", rect.top < cardHeight + 24);
+    root.classList.toggle("daily-familiar--anchor-below", rect.top < pickerHeight + 16);
   }
 
   function positionTilde(left, top, persist) {
@@ -247,7 +201,7 @@
     root.style.top = Math.round(safeTop) + "px";
     root.style.right = "auto";
     root.style.bottom = "auto";
-    updateCardDirection();
+    updatePickerDirection();
     if (persist) {
       store.set(positionKey, JSON.stringify({ left: Math.round(safeLeft), top: Math.round(safeTop) }));
     }
@@ -266,13 +220,14 @@
     }
   }
 
-  function toggle(open, restoreFocus) {
-    card.hidden = !open;
+  function togglePicker(open, restoreFocus) {
+    picker.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
     updateSleepState(new Date());
     if (open) {
-      updateCardDirection();
-      closeButton.focus();
+      updatePickerDirection();
+      var activeLook = looks.querySelector('[aria-pressed="true"]');
+      if (activeLook) activeLook.focus();
     }
     if (!open && restoreFocus) trigger.focus();
   }
@@ -282,7 +237,7 @@
       suppressClick = false;
       return;
     }
-    toggle(card.hidden, false);
+    togglePicker(picker.hidden, false);
   });
 
   trigger.addEventListener("pointerdown", function (event) {
@@ -340,11 +295,12 @@
     positionTilde(rect.left + direction[0] * step, rect.top + direction[1] * step, true);
   });
 
-  closeButton.addEventListener("click", function () {
-    toggle(false, true);
+  document.addEventListener("pointerdown", function (event) {
+    if (!picker.hidden && !root.contains(event.target)) togglePicker(false, false);
   });
+
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && !card.hidden) toggle(false, true);
+    if (event.key === "Escape" && !picker.hidden) togglePicker(false, true);
   });
 
   var seenToday = store.get("daily-familiar:seen-day") === day;
@@ -367,8 +323,6 @@
       var currentDay = dateKey(currentDate);
       if (currentDay !== day) {
         day = currentDay;
-        message = dailyPick(messages, day, "message:");
-        renderMessage(message);
         if (!hasSelectedPet) pet = dailyPick(pets, day, "pet:");
       }
       updateSleepState(currentDate);
@@ -381,11 +335,11 @@
   if (!seenToday) {
     store.set("daily-familiar:seen-day", day);
     if (!reduceMotion) {
-      var delay = Math.max(0, Math.min(10000, parseInt(cfg.dataset.delayMs, 10) || 0));
+      var entranceDelay = Math.max(0, Math.min(10000, parseInt(cfg.dataset.delayMs, 10) || 0));
       window.setTimeout(function () {
         root.classList.remove("daily-familiar--pending");
         root.classList.add("daily-familiar--entering");
-      }, delay);
+      }, entranceDelay);
     }
   }
 }());

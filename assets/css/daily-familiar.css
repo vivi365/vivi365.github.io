@@ -77,8 +77,6 @@
 }
 
 .daily-familiar__trigger:focus-visible,
-.daily-familiar__close:focus-visible,
-.daily-familiar__link:focus-visible,
 .daily-familiar__look:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
@@ -93,145 +91,45 @@
   filter: drop-shadow(0 3px 4px rgba(23, 79, 85, 0.16));
 }
 
-.daily-familiar__card {
+.daily-familiar__picker {
   position: absolute;
   right: 0.2rem;
-  bottom: calc(100% + 0.65rem);
-  width: min(15.75rem, calc(100vw - 1.25rem));
-  padding: 0.8rem 2.25rem 0.8rem 0.9rem;
-  overflow: visible;
-  border: 1px solid rgba(35, 86, 90, 0.5);
-  border-radius: 10px;
-  background: rgba(239, 248, 243, 0.95);
-  box-shadow: 0 4px 10px rgba(35, 86, 90, 0.14);
+  bottom: calc(100% + 0.5rem);
+  width: max-content;
+  max-width: calc(100vw - 1rem);
+  padding: 0.4rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
 }
 
-.daily-familiar__card[hidden] {
+.daily-familiar__picker[hidden] {
   display: none;
 }
 
-.daily-familiar__card::after {
-  content: '';
-  position: absolute;
-  right: 1.35rem;
-  bottom: -7px;
-  width: 12px;
-  height: 12px;
-  border-right: 1px solid rgba(35, 86, 90, 0.5);
-  border-bottom: 1px solid rgba(35, 86, 90, 0.5);
-  background: rgb(239, 248, 243);
-  pointer-events: none;
-  transform: rotate(45deg);
-}
-
-.daily-familiar--anchor-left .daily-familiar__card {
+.daily-familiar--anchor-left .daily-familiar__picker {
   right: auto;
   left: 0.2rem;
 }
 
-.daily-familiar--anchor-left .daily-familiar__card::after {
-  right: auto;
-  left: 1.35rem;
-}
-
-.daily-familiar--anchor-below .daily-familiar__card {
-  top: calc(100% + 0.7rem);
+.daily-familiar--anchor-below .daily-familiar__picker {
+  top: calc(100% + 0.5rem);
   bottom: auto;
-}
-
-.daily-familiar--anchor-below .daily-familiar__card::after {
-  top: -7px;
-  bottom: auto;
-  border: 0;
-  border-top: 1px solid rgba(35, 86, 90, 0.5);
-  border-left: 1px solid rgba(35, 86, 90, 0.5);
-  transform: rotate(45deg);
-}
-
-.daily-familiar__close {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.65rem;
-  width: 1.55rem;
-  height: 1.55rem;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  background: transparent;
-  color: var(--text-secondary);
-  font: inherit;
-  font-size: 1.15rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.daily-familiar__close:hover {
-  border-color: rgba(35, 86, 90, 0.35);
-  background: rgba(22, 160, 133, 0.08);
-}
-
-.daily-familiar__label {
-  margin: 0 0 0.5rem;
-  color: var(--accent-color);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  text-align: left;
-  text-transform: none;
-}
-
-.daily-familiar__text,
-.daily-familiar__attribution {
-  margin: 0;
-  color: var(--text-color);
-  font-size: 0.92rem;
-  line-height: 1.45;
-  overflow-wrap: anywhere;
-  text-align: left;
-}
-
-.daily-familiar__attribution {
-  margin-top: 0.45rem;
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-}
-
-.daily-familiar__link {
-  position: relative;
-  z-index: 1;
-  display: inline-block;
-  margin-top: 0.75rem;
-  font: inherit;
-  font-size: 0.78rem;
-}
-
-.daily-familiar__link {
-  color: var(--accent-color);
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
-}
-
-.daily-familiar__link[hidden] {
-  display: none;
-}
-
-.daily-familiar__customize {
-  margin-top: 0.65rem;
-  padding-top: 0.55rem;
-  border-top: 1px solid rgba(35, 86, 90, 0.18);
 }
 
 .daily-familiar__looks {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   gap: 0.3rem;
 }
 
 .daily-familiar__look {
-  width: 2.1rem;
-  height: 2.1rem;
-  padding: 0.12rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.2rem;
   border: 1px solid rgba(35, 86, 90, 0.25);
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.4);
@@ -308,9 +206,8 @@
     bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
   }
 
-  .daily-familiar__card {
+  .daily-familiar__picker {
     right: 0.1rem;
-    width: min(15.25rem, calc(100vw - 1rem));
   }
 }
 

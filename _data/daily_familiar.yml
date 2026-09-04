@@ -1,5 +1,3 @@
-# Add or replace messages here. `text` is required; `attribution` and `link`
-# are optional. Links may be site-root paths or HTTPS URLs.
 timezone: Europe/Stockholm
 delay_ms: 1800
 pets:
@@ -23,31 +21,3 @@ pets:
     image: /assets/images/daily-familiar/pixel-rain-v4.png
     alt: A scruffy floating aqua pixel cat in a patched mustard-yellow rain hood
     label: Raincoat
-messages:
-  - id: slow-start
-    text: Small steps still move the day forward.
-    attribution: Vivi
-  - id: fresh-page
-    text: Leave one kind note for your future self.
-  - id: curious
-    text: Follow the question that keeps tapping your shoulder.
-  - id: enough
-    text: Done is a lovely place to rest for a moment.
-  - id: window
-    text: Look up. The light has changed.
-    attribution: Vivi
-  - id: gentleness
-    text: Make the next thing easier, not perfect.
-  - id: tidying
-    text: Put one small thing back where it belongs.
-  - id: pause
-    text: A pause can be part of the work.
-  - id: spark
-    text: Keep the tiny spark; it knows where to go.
-  - id: neighbor
-    text: Send someone a little warmth today.
-  - id: notice
-    text: Notice one ordinary thing doing its job well.
-  - id: onward
-    text: There is no rush in a direction you trust.
-    attribution: Vivi
