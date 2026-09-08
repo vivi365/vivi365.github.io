@@ -130,6 +130,12 @@
   filter: drop-shadow(0 3px 4px rgba(23, 79, 85, 0.16));
 }
 
+/* Star's artwork has less transparent padding than the other looks. */
+.daily-familiar__image[data-pet-id="star"],
+.daily-familiar__look[data-pet-id="star"] img {
+  transform: scale(0.84);
+}
+
 .daily-familiar__reaction {
   position: absolute;
   right: 4%;
