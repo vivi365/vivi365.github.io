@@ -344,7 +344,7 @@
   }
 
   function homePosition() {
-    var homeRect = home.getBoundingClientRect();
+    var homeRect = homeImage.getBoundingClientRect();
     return {
       left: homeRect.left + homeRect.width * 0.6 - root.offsetWidth / 2,
       top: homeRect.top + homeRect.height * 0.52 - root.offsetHeight / 2

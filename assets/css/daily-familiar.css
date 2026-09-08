@@ -329,15 +329,15 @@
 
 @media (max-width: 768px) {
   .daily-familiar-home {
-    --daily-familiar-home-size: 148px;
+    --daily-familiar-home-size: clamp(120px, min(42vw, 42vh), 148px);
     right: calc(0.2rem + env(safe-area-inset-right, 0px));
     bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   .daily-familiar {
-    --daily-familiar-size: 106px;
-    right: calc(0.5rem + env(safe-area-inset-right, 0px));
-    bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    --daily-familiar-size: clamp(88px, min(30vw, 30vh), 106px);
+    right: calc(clamp(0.5rem, 2vw, 0.75rem) + env(safe-area-inset-right, 0px));
+    bottom: calc(clamp(1.5rem, 6vh, 2rem) + env(safe-area-inset-bottom, 0px));
   }
 
   .daily-familiar__picker {
