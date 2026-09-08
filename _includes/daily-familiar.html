@@ -25,4 +25,5 @@
   {% for pet in familiar.pets %}<div data-familiar-pet data-id="{{ pet.id | escape }}" data-image="{{ pet.image | escape }}" data-alt="{{ pet.alt | escape }}" data-label="{{ pet.label | escape }}"></div>{% endfor %}
   {% for food in familiar.foods %}<div data-familiar-food data-id="{{ food.id | escape }}" data-image="{{ food.image | escape }}" data-label="{{ food.label | escape }}"></div>{% endfor %}
 </div>
+<script src="{{ '/assets/js/daily-familiar-state.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/daily-familiar.js' | relative_url }}" defer></script>
