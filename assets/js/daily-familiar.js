@@ -214,9 +214,11 @@
     root.classList.toggle("daily-familiar--sleeping", sleeping);
     if (sleeping) {
       var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:30." : "She is sleeping in her tree home. Drag her away to wake her.";
-      trigger.setAttribute("aria-label", "Open tilde's controls. " + sleepMessage);
+      trigger.setAttribute("aria-label", sleepMessage);
+      trigger.setAttribute("aria-disabled", "true");
     } else {
       trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
+      trigger.setAttribute("aria-disabled", "false");
     }
     return true;
   }
@@ -340,6 +342,7 @@
   function setLocation(nextLocation, persist) {
     locationState = nextLocation;
     root.classList.toggle("daily-familiar--at-home", locationState === "home");
+    if (locationState === "home") closePicker();
     if (persist) store.set(locationKey, locationState);
   }
 
@@ -427,7 +430,13 @@
     }
   }
 
+  function closePicker() {
+    picker.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+  }
+
   function togglePicker(open, restoreFocus) {
+    if (open && locationState === "home") return;
     picker.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
     if (open) {
