@@ -90,7 +90,7 @@
 
 .daily-familiar--sleeping .daily-familiar__image {
   opacity: 0.94;
-  transform: translateY(5px) rotate(-4deg) scale(var(--daily-familiar-pet-scale, 1));
+  transform: translateY(5px) rotate(-4deg);
   transform-origin: center bottom;
 }
 
@@ -118,7 +118,6 @@
 }
 
 .daily-familiar__image {
-  --daily-familiar-pet-scale: 1;
   display: block;
   position: absolute;
   top: 9%;
@@ -128,33 +127,13 @@
   max-width: none;
   object-fit: contain;
   image-rendering: pixelated;
-  transform: scale(var(--daily-familiar-pet-scale));
   filter: drop-shadow(0 3px 4px rgba(23, 79, 85, 0.16));
 }
 
-/* Normalize each asset's transparent padding to Dancer's visible footprint. */
+/* Star's artwork has less transparent padding than the other looks. */
 .daily-familiar__image[data-pet-id="star"],
-.daily-familiar__look[data-pet-id="star"] {
-  --daily-familiar-pet-scale: 1.05;
-}
-
-.daily-familiar__image[data-pet-id="moon"],
-.daily-familiar__look[data-pet-id="moon"] {
-  --daily-familiar-pet-scale: 1.01;
-}
-
-.daily-familiar__image[data-pet-id="terminal"],
-.daily-familiar__look[data-pet-id="terminal"] {
-  --daily-familiar-pet-scale: 1;
-}
-
-.daily-familiar__image[data-pet-id="rain"],
-.daily-familiar__look[data-pet-id="rain"] {
-  --daily-familiar-pet-scale: 1.07;
-}
-
-.daily-familiar__look img {
-  transform: scale(var(--daily-familiar-pet-scale, 1));
+.daily-familiar__look[data-pet-id="star"] img {
+  transform: scale(0.84);
 }
 
 .daily-familiar__reaction {
