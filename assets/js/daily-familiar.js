@@ -3,7 +3,8 @@
 
   var root = document.getElementById("daily-familiar");
   var bank = document.getElementById("daily-familiar-bank");
-  if (!root || !bank) return;
+  var state = window.DailyFamiliarState;
+  if (!root || !bank || !state) return;
 
   var cfg = bank.querySelector("[data-familiar-config]");
   var homeCfg = bank.querySelector("[data-familiar-home]");
@@ -33,34 +34,14 @@
     }
   };
 
-  function zonedParts(date, options) {
-    var formatter = new Intl.DateTimeFormat("en", Object.assign({
-      timeZone: cfg.dataset.timezone || "Europe/Stockholm"
-    }, options));
-    var values = {};
-    formatter.formatToParts(date).forEach(function (part) {
-      if (part.type !== "literal") values[part.type] = part.value;
-    });
-    return values;
-  }
+  var timezone = cfg.dataset.timezone || "Europe/Stockholm";
 
   function dateKey(date) {
-    var values = zonedParts(date, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    });
-    return values.year + "-" + values.month + "-" + values.day;
+    return state.dateKey(date, timezone);
   }
 
   function isSleepTime(date) {
-    var values = zonedParts(date, {
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23"
-    });
-    var minutes = Number(values.hour) * 60 + Number(values.minute);
-    return minutes >= 22 * 60 + 30 || minutes < 8 * 60;
+    return state.isSleepTime(date, timezone);
   }
 
   function dateOrdinal(day) {
@@ -198,8 +179,17 @@
   var day = dateKey(new Date());
   var positionKey = "daily-familiar:position";
   var locationKey = "daily-familiar:location";
+  var scheduledSleepKey = "daily-familiar:scheduled-sleep";
+  var lastSeenKey = "daily-familiar:last-seen";
   var storedLocation = store.get(locationKey);
   var locationState = storedLocation === "home" || storedLocation === "free" ? storedLocation : (store.get(positionKey) ? "free" : "home");
+  if (storedLocation !== null && storedLocation !== locationState) store.remove(locationKey);
+  var storedScheduledSleep = store.get(scheduledSleepKey);
+  var scheduledSleepPending = storedScheduledSleep === "1";
+  if (storedScheduledSleep !== null && !scheduledSleepPending) store.remove(scheduledSleepKey);
+  var storedLastSeen = store.get(lastSeenKey);
+  var lastSeenAt = state.parseStoredTimestamp(storedLastSeen, Date.now());
+  if (storedLastSeen !== null && lastSeenAt === null) store.remove(lastSeenKey);
   var storedPet = petById(store.get("daily-familiar:selected-pet"));
   var hasSelectedPet = Boolean(storedPet);
   var pet = storedPet || dailyPick(pets, day, "pet:");
@@ -223,7 +213,7 @@
     normalizePetImage(imageUrl);
     root.classList.toggle("daily-familiar--sleeping", sleeping);
     if (sleeping) {
-      var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:00." : "She is sleeping in her tree home. Drag her away to wake her.";
+      var sleepMessage = isSleepTime(new Date()) ? "She is sleeping in her tree home until 08:30." : "She is sleeping in her tree home. Drag her away to wake her.";
       trigger.setAttribute("aria-label", "Open tilde's controls. " + sleepMessage);
     } else {
       trigger.setAttribute("aria-label", "Choose tilde's look. Current look: " + (nextPet.dataset.label || nextPet.dataset.id) + ". Drag or use arrow keys to move her.");
@@ -232,7 +222,7 @@
   }
 
   function updateSleepState(date) {
-    var sleeping = Boolean(sleepPet && (isSleepTime(date) || locationState === "home"));
+    var sleeping = state.isSleepingAtLocation(locationState, Boolean(sleepPet));
     var activePet = sleeping ? sleepPet : pet;
     updateLookButtons(activePet);
     return renderPet(activePet, sleeping);
@@ -249,6 +239,7 @@
   }
 
   pets.forEach(function (petOption) {
+    if (petOption === sleepPet) return;
     var imageUrl = safeImageUrl(petOption.dataset.image);
     if (!imageUrl) return;
     var button = document.createElement("button");
@@ -391,20 +382,47 @@
     home.classList.remove("daily-familiar-home--ready");
   }
 
+  function wakePosition() {
+    var homeRect = home.getBoundingClientRect();
+    return {
+      left: homeRect.left - root.offsetWidth * 0.65,
+      top: homeRect.top + homeRect.height * 0.42 - root.offsetHeight / 2
+    };
+  }
+
+  function wakeOutsideHome(persist) {
+    var target = wakePosition();
+    setLocation("free", persist);
+    positionTilde(target.left, target.top, persist);
+    nearHome = false;
+    root.classList.remove("daily-familiar--near-home");
+    home.classList.remove("daily-familiar-home--ready");
+  }
+
   function syncTimeState(date) {
-    if (isSleepTime(date)) goHome(true);
+    var scheduledSleep = isSleepTime(date);
+    var crossedWake = state.crossedScheduledWake(lastSeenAt, date, timezone);
+    if (scheduledSleep) {
+      scheduledSleepPending = true;
+      store.set(scheduledSleepKey, "1");
+      goHome(true);
+    } else if (scheduledSleepPending || crossedWake) {
+      scheduledSleepPending = false;
+      store.remove(scheduledSleepKey);
+      if (locationState === "home") wakeOutsideHome(true);
+    }
     updateSleepState(date);
+    lastSeenAt = date.getTime();
+    store.set(lastSeenKey, String(lastSeenAt));
   }
 
   function restorePosition() {
     var saved = store.get(positionKey);
     if (!saved) return;
-    try {
-      var position = JSON.parse(saved);
-      if (Number.isFinite(position.left) && Number.isFinite(position.top)) {
-        positionTilde(position.left, position.top, false);
-      }
-    } catch (_) {
+    var position = state.parseStoredPosition(saved);
+    if (position) {
+      positionTilde(position.left, position.top, false);
+    } else {
       store.remove(positionKey);
     }
   }
@@ -519,10 +537,22 @@
     if (!direction) return;
     event.preventDefault();
     if (sleepPet && isSleepTime(new Date())) return;
+    if (locationState === "home") {
+      wakeOutsideHome(true);
+      updateSleepState(new Date());
+      return;
+    }
     var rect = root.getBoundingClientRect();
     var step = event.shiftKey ? 24 : 10;
-    setLocation("free", true);
-    positionTilde(rect.left + direction[0] * step, rect.top + direction[1] * step, true);
+    positionTilde(rect.left + direction[0] * step, rect.top + direction[1] * step, false);
+    updateHomeProximity();
+    if (nearHome) {
+      goHome(true);
+    } else {
+      setLocation("free", true);
+      var updatedRect = root.getBoundingClientRect();
+      positionTilde(updatedRect.left, updatedRect.top, true);
+    }
     updateSleepState(new Date());
   });
 
