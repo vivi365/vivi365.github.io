@@ -209,6 +209,7 @@
     var imageUrl = safeImageUrl(nextPet.dataset.image);
     if (!imageUrl) return false;
     image.src = imageUrl;
+    image.dataset.petId = nextPet.dataset.id;
     image.hidden = false;
     normalizePetImage(imageUrl);
     root.classList.toggle("daily-familiar--sleeping", sleeping);
