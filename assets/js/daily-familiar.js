@@ -239,6 +239,7 @@
   }
 
   pets.forEach(function (petOption) {
+    if (petOption === sleepPet) return;
     var imageUrl = safeImageUrl(petOption.dataset.image);
     if (!imageUrl) return;
     var button = document.createElement("button");
