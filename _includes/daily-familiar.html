@@ -19,6 +19,10 @@
     </div>
   </div>
 </aside>
+<div id="daily-familiar-introduction" class="daily-familiar__introduction" role="status" aria-live="polite" aria-atomic="true" hidden>
+  <span class="daily-familiar__introduction-text"></span>
+  <button class="daily-familiar__introduction-close" type="button" aria-label="Dismiss tilde's introduction">×</button>
+</div>
 <div id="daily-familiar-bank" hidden aria-hidden="true">
   <div data-familiar-config data-timezone="{{ familiar.timezone | default: 'Europe/Stockholm' | escape }}" data-delay-ms="{{ familiar.delay_ms | default: 1200 | escape }}"></div>
   <div data-familiar-home data-image="{{ familiar.home.image | escape }}" data-label="{{ familiar.home.label | escape }}"></div>
@@ -26,4 +30,5 @@
   {% for food in familiar.foods %}<div data-familiar-food data-id="{{ food.id | escape }}" data-image="{{ food.image | escape }}" data-label="{{ food.label | escape }}"></div>{% endfor %}
 </div>
 <script src="{{ '/assets/js/daily-familiar-state.js' | relative_url }}" defer></script>
+<script src="{{ '/assets/js/daily-familiar-introduction.js' | relative_url }}" defer></script>
 <script src="{{ '/assets/js/daily-familiar.js' | relative_url }}" defer></script>

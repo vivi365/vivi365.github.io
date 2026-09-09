@@ -4,7 +4,11 @@
   var root = document.getElementById("daily-familiar");
   var bank = document.getElementById("daily-familiar-bank");
   var state = window.DailyFamiliarState;
-  if (!root || !bank || !state) return;
+  var introductionApi = window.DailyFamiliarIntroduction;
+  var introduction = document.getElementById("daily-familiar-introduction");
+  var introductionMessage = introduction && introduction.querySelector(".daily-familiar__introduction-text");
+  var introductionClose = introduction && introduction.querySelector(".daily-familiar__introduction-close");
+  if (!root || !bank || !state || !introductionApi || !introduction || !introductionMessage || !introductionClose) return;
 
   var cfg = bank.querySelector("[data-familiar-config]");
   var homeCfg = bank.querySelector("[data-familiar-home]");
@@ -198,6 +202,28 @@
   var HOME_ENTER_DISTANCE = 92;
   var HOME_EXIT_DISTANCE = 124;
   var feedingTimer = null;
+  var introductionController;
+
+  function updateIntroductionDirection() {
+    var rect = root.getBoundingClientRect();
+    var placement = introductionApi.placementFor(rect, introduction.offsetHeight || 64, window.innerWidth);
+    var bubbleWidth = introduction.offsetWidth || 180;
+    var bubbleHeight = introduction.offsetHeight || 64;
+    var left = placement.anchorLeft ? rect.left + rect.width * 0.28 : rect.right - bubbleWidth * 0.82;
+    var top = placement.anchorBelow ? rect.bottom - 8 : rect.top - bubbleHeight + 12;
+    introduction.classList.toggle("daily-familiar__introduction--anchor-left", placement.anchorLeft);
+    introduction.classList.toggle("daily-familiar__introduction--anchor-below", placement.anchorBelow);
+    introduction.style.left = Math.round(clamp(left, 8, window.innerWidth - bubbleWidth - 8)) + "px";
+    introduction.style.top = Math.round(clamp(top, 8, window.innerHeight - bubbleHeight - 8)) + "px";
+  }
+
+  introductionController = introductionApi.create({
+    bubble: introduction,
+    message: introductionMessage,
+    close: introductionClose,
+    keyboardTarget: document,
+    onPlacement: updateIntroductionDirection
+  });
 
   function updateLookButtons(activePet) {
     Array.prototype.forEach.call(looks.querySelectorAll("button[data-pet-id]"), function (button) {
@@ -334,6 +360,7 @@
     root.style.right = "auto";
     root.style.bottom = "auto";
     updatePickerDirection();
+    if (!introduction.hidden) introductionController.updatePlacement();
     if (persist) {
       store.set(positionKey, JSON.stringify({ left: Math.round(safeLeft), top: Math.round(safeTop) }));
     }
@@ -597,6 +624,7 @@
     if (!root.style.left || !root.style.top) return;
     var rect = root.getBoundingClientRect();
     positionTilde(rect.left, rect.top, true);
+    if (!introduction.hidden) introductionController.updatePlacement();
   });
 
   function scheduleSleepCheck() {
@@ -623,7 +651,12 @@
       window.setTimeout(function () {
         root.classList.remove("daily-familiar--pending");
         root.classList.add("daily-familiar--entering");
+        introductionController.show(root.classList.contains("daily-familiar--sleeping"));
       }, entranceDelay);
+    } else {
+      introductionController.show(root.classList.contains("daily-familiar--sleeping"));
     }
+  } else {
+    introductionController.show(root.classList.contains("daily-familiar--sleeping"));
   }
 }());
