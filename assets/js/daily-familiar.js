@@ -204,17 +204,35 @@
   var feedingTimer = null;
   var introductionController;
 
+  function safeInset(name) {
+    var value = parseFloat(window.getComputedStyle(introduction).getPropertyValue(name));
+    return Number.isFinite(value) ? value : 0;
+  }
+
   function updateIntroductionDirection() {
-    var rect = root.getBoundingClientRect();
-    var placement = introductionApi.placementFor(rect, introduction.offsetHeight || 64, window.innerWidth);
-    var bubbleWidth = introduction.offsetWidth || 180;
-    var bubbleHeight = introduction.offsetHeight || 64;
-    var left = placement.anchorLeft ? rect.left + rect.width * 0.28 : rect.right - bubbleWidth * 0.82;
-    var top = placement.anchorBelow ? rect.bottom - 8 : rect.top - bubbleHeight + 12;
-    introduction.classList.toggle("daily-familiar__introduction--anchor-left", placement.anchorLeft);
-    introduction.classList.toggle("daily-familiar__introduction--anchor-below", placement.anchorBelow);
-    introduction.style.left = Math.round(clamp(left, 8, window.innerWidth - bubbleWidth - 8)) + "px";
-    introduction.style.top = Math.round(clamp(top, 8, window.innerHeight - bubbleHeight - 8)) + "px";
+    var placement = introductionApi.bubblePlacement({
+      tilde: root.getBoundingClientRect(),
+      crib: home.getBoundingClientRect(),
+      bubbleWidth: introduction.offsetWidth || 180,
+      bubbleHeight: introduction.offsetHeight || 64,
+      viewportWidth: window.innerWidth,
+      viewportHeight: window.innerHeight,
+      safeLeft: safeInset("--daily-familiar-introduction-safe-left"),
+      safeRight: safeInset("--daily-familiar-introduction-safe-right"),
+      safeTop: safeInset("--daily-familiar-introduction-safe-top"),
+      safeBottom: safeInset("--daily-familiar-introduction-safe-bottom")
+    });
+    introduction.classList.remove(
+      "daily-familiar__introduction--edge-top",
+      "daily-familiar__introduction--edge-right",
+      "daily-familiar__introduction--edge-bottom",
+      "daily-familiar__introduction--edge-left"
+    );
+    introduction.classList.add("daily-familiar__introduction--edge-" + placement.edge);
+    introduction.style.left = Math.round(placement.left) + "px";
+    introduction.style.top = Math.round(placement.top) + "px";
+    introduction.style.setProperty("--daily-familiar-pointer-x", Math.round(placement.pointerX) + "px");
+    introduction.style.setProperty("--daily-familiar-pointer-y", Math.round(placement.pointerY) + "px");
   }
 
   introductionController = introductionApi.create({
@@ -624,6 +642,9 @@
     if (!root.style.left || !root.style.top) return;
     var rect = root.getBoundingClientRect();
     positionTilde(rect.left, rect.top, true);
+    if (!introduction.hidden) introductionController.updatePlacement();
+  });
+  window.addEventListener("orientationchange", function () {
     if (!introduction.hidden) introductionController.updatePlacement();
   });
 
