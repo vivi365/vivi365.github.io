@@ -73,3 +73,54 @@ test("flips the speech bubble away from narrow viewport edges", function () {
   assert.deepEqual(introduction.placementFor({ left: 8, width: 100, top: 20 }, 64, 390), { anchorLeft: true, anchorBelow: true });
   assert.deepEqual(introduction.placementFor({ left: 900, width: 100, top: 300 }, 64, 1200), { anchorLeft: false, anchorBelow: false });
 });
+
+function rect(left, top, width, height) {
+  return { left: left, top: top, width: width, height: height, right: left + width, bottom: top + height };
+}
+
+test("places the bubble beside the full composition without collision", function () {
+  var result = introduction.bubblePlacement({
+    tilde: rect(220, 430, 120, 120),
+    crib: rect(190, 390, 190, 190),
+    bubbleWidth: 150,
+    bubbleHeight: 58,
+    viewportWidth: 375,
+    viewportHeight: 667
+  });
+  assert.equal(result.edge, "bottom");
+  assert.deepEqual({ left: result.left, top: result.top }, { left: 210, top: 592 });
+});
+
+test("chooses a side with room and aims the pointer at tilde", function () {
+  var result = introduction.bubblePlacement({
+    tilde: rect(26, 210, 120, 120),
+    crib: rect(260, 20, 100, 100),
+    bubbleWidth: 120,
+    bubbleHeight: 56,
+    viewportWidth: 400,
+    viewportHeight: 400
+  });
+  assert.equal(result.edge, "bottom");
+  assert.equal(result.pointerX, 78);
+  assert.ok(result.left >= 8 && result.left + 120 <= 392);
+  assert.ok(result.top >= 8 && result.top + 56 <= 392);
+});
+
+test("never selects an overlapping candidate when a safe corner exists", function () {
+  var result = introduction.bubblePlacement({
+    tilde: rect(150, 260, 100, 100),
+    crib: rect(270, 270, 100, 100),
+    bubbleWidth: 130,
+    bubbleHeight: 60,
+    viewportWidth: 500,
+    viewportHeight: 400,
+    safeLeft: 20,
+    safeRight: 20,
+    safeTop: 20,
+    safeBottom: 20
+  });
+  var bubble = rect(result.left, result.top, 130, 60);
+  assert.equal(result.edge, "left");
+  assert.ok(bubble.right <= 480);
+  assert.ok(bubble.bottom <= 380);
+});
