@@ -31,7 +31,7 @@
   date_display: "18 April 2026"
   sort_date: "2026-04-18"
   description: "The first systematic study of cryptographic API misuse detection in Go, comparing four tools across 328 security-critical open-source projects. Presented at SVM 2026, co-located with ICSE."
-  featured: true
+  featured: false
   links:
     - label: "Slides"
       url: "/assets/talks/2026_04_18_SVM26_go_crypto_misuse.pdf"
@@ -42,7 +42,7 @@
   date_display: "March 2026"
   sort_date: "2026-03-10"
   description: "Presenting PoCo's evaluation results on 23 real-world vulnerabilities to an industry audience, with discussion on scaling agentic exploit generation beyond smart contracts."
-  featured: true
+  featured: false
   links:
     - label: "Slides"
       url: "/assets/talks/2026-03-10-huawei-ftds.pdf"
