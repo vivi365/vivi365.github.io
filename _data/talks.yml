@@ -1,3 +1,17 @@
+- title: "ASE 2026 Journal-First Track. PoCo: Agentic Proof-of-Concept Exploit Generation for Smart Contracts"
+  location: "Munich, Germany"
+  date_display: "15 October 2026"
+  sort_date: "2026-10-15"
+  description: "Presenting our TOSEM paper on PoCo, an agentic framework for generating proof-of-concept exploits for smart contract vulnerabilities, in the ASE 2026 Journal-First track together with Sofia Bobadilla."
+  featured: true
+  links:
+    - label: "Paper"
+      url: "https://arxiv.org/abs/2511.02780"
+      kind: "external"
+    - label: "Slides"
+      url: "/assets/talks/2026-10-15-ase-poco.pdf"
+      kind: "slides"
+
 - title: "Dagstuhl Seminar 26192. Evaluating Logical Correctness in Agentic PoC Exploit Generation"
   location: "Dagstuhl, Germany"
   date_display: "6 May 2026"
